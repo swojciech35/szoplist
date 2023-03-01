@@ -14,23 +14,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "808189868500-9ueadfa59v2p4k16oqpucqnmjmue6lca.apps.googleusercontent.com",
+          "client_id": "808189868500-qbc6jq958h0f3ah119efsnbkubsgobka.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.szoplist",
-            "certificate_hash": "df111cef4bb39228e1d9a4755c08b332a0374c1a"
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
           }
         },
         {
-          "client_id": "808189868500-pdtqvb0oqqvp91dqgg17b7jb6584a0jp.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.szoplist",
-            "certificate_hash": "35150be6cf7fbbdfa761275d5fbe93278967ddb5"
-          }
-        },
-        {
-          "client_id": "808189868500-hf4tmk5usnatt72fiu4hivp0jq924o2e.apps.googleusercontent.com",
+          "client_id": "808189868500-a6ee5k023l90fpc7jdembcu8t4t19fv4.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -43,7 +35,7 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "808189868500-hf4tmk5usnatt72fiu4hivp0jq924o2e.apps.googleusercontent.com",
+              "client_id": "808189868500-a6ee5k023l90fpc7jdembcu8t4t19fv4.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
