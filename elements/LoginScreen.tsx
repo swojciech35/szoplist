@@ -15,6 +15,17 @@ function LoginScreen(): JSX.Element {
     return auth().signInWithCredential(googleCredential);
   }
 
+  function signOut() {
+    if (usr != null) {
+      auth()
+        .signOut()
+        .then(() => {
+          setUsr(null);
+          console.log('User signed out!');
+        });
+    }
+  }
+
   return (
     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
       <Text style={{color: 'black'}}>Login screen</Text>
@@ -26,6 +37,7 @@ function LoginScreen(): JSX.Element {
         }
       />
       <Button title="User data" onPress={() => console.log(usr)} />
+      <Button title="Wyloguj" onPress={() => signOut()} />
     </View>
   );
 }
