@@ -28,10 +28,41 @@ setMarked(check  => check.map((itemC,indexC) => indexC === catIndex ? (check[ind
 
 const changeTabs = (ifOpen:boolean) => {setTabs(check => check.map(() => ifOpen))}
 
+const createList = () =>{
+
+let tmp = list;
+
+console.log(tmp);
+
+for (var i=list.length-1;i>=0;i--){
+
+     console.log("jestem na ",i," z ", list.length )
+     for (var j=list[i].products.length-1;j>=0;j--){
+
+          console.log("jestem na ",i," ",j," z ", list[i].products.length )
+          if(markedProducts[i][j]==false) 
+          {
+               tmp[i].products.splice(j,1);
+             //  console.log("usuwa sie z ",i," ",j)
+          }
+     }
+
+     if (tmp[i].products.length == 0){
+          tmp.splice(i,1);
+     }
+}
+
+     // console.log(list)
+     
+     // tmp[0].products.splice(1,1);
+     console.log(tmp);
+}
+
 return (
 <View>
      <TouchableOpacity onPress={() => changeTabs(false)}><Text>schowaj wszystkie</Text></TouchableOpacity>
      <TouchableOpacity onPress={() => changeTabs(true)}><Text>rozwiń wszystkie</Text></TouchableOpacity>
+     <TouchableOpacity onPress={() => createList()}><Text>wyświetl liste</Text></TouchableOpacity>
 <ScrollView>
 {listOfCategories}
 </ScrollView>
