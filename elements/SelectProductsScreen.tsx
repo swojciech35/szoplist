@@ -3,6 +3,7 @@ import {View, Text, ScrollView} from 'react-native';
 import { useState } from 'react';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import CustomCheckbox from './CustomCheckbox';
+import { FlipInEasyX } from 'react-native-reanimated';
 function SelectProductsScreen(): JSX.Element {
 
      var allProducts = 
@@ -22,16 +23,20 @@ var listOfCategories = list.map((cat,catIndex) => (<View><TouchableOpacity style
 
 const toggleCategory = (index:Number) => {setTabs(check => check.map((item, idx) => idx === index ? !item : item))};
 const markProduct = (catIndex:Number, prodIndex:Number) => {
-
 setMarked(check  => check.map((itemC,indexC) => indexC === catIndex ? (check[indexC].map((itemP, indexP) => indexP === prodIndex ? !itemP : itemP)) : itemC))
-
 }
 
-return (
+const changeTabs = (ifOpen:boolean) => {setTabs(check => check.map(() => ifOpen))}
 
+return (
+<View>
+     <TouchableOpacity onPress={() => changeTabs(false)}><Text>schowaj wszystkie</Text></TouchableOpacity>
+     <TouchableOpacity onPress={() => changeTabs(true)}><Text>rozwiń wszystkie</Text></TouchableOpacity>
 <ScrollView>
 {listOfCategories}
 </ScrollView>
+
+</View>
 
 )
 }
