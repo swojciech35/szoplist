@@ -15,6 +15,7 @@
     "@react-native-google-signin/google-signin": "^9.0.2",
     "@react-navigation/drawer": "^6.6.2",
     "@react-navigation/native": "^6.1.6",
+    "@reduxjs/toolkit": "^1.9.3",
     "react": "18.2.0",
     "react-native": "0.71.3",
     "react-native-element-textinput": "^2.2.0",
@@ -22,7 +23,10 @@
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
     "react-native-reanimated": "^2.14.4",
     "react-native-safe-area-context": "^4.5.0",
-    "react-native-screens": "^3.20.0"
+    "react-native-screens": "^3.20.0",
+    "react-redux": "^8.0.5",
+    "redux": "^4.2.1",
+    "redux-thunk": "^2.4.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

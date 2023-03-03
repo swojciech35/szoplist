@@ -6,8 +6,11 @@ import {GoogleSigninButton} from '@react-native-google-signin/google-signin';
 import {TextInput} from 'react-native-element-textinput';
 import React from 'react';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import {setUser} from '../redux/userSlice';
+import {useAppSelector, useAppDispatch} from '../hooks';
 function LoginScreen(): JSX.Element {
-  const [usr, setUsr] = React.useState<any>(null);
+  const usr = useAppSelector(state => state.user.userData);
+  const dispatch = useAppDispatch();
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
 
@@ -15,7 +18,7 @@ function LoginScreen(): JSX.Element {
     await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true});
     const {idToken} = await GoogleSignin.signIn();
     const googleCredential = auth.GoogleAuthProvider.credential(idToken);
-    setUsr(auth().currentUser);
+    dispatch(setUser(auth().currentUser));
 
     return auth().signInWithCredential(googleCredential);
   }
@@ -26,7 +29,7 @@ function LoginScreen(): JSX.Element {
         .signInWithEmailAndPassword(email, password)
         .then(() => {
           console.log('User login succesfull');
-          setUsr(auth().currentUser);
+          dispatch(setUser(auth().currentUser));
           ToastAndroid.show('Zalogowano pomyślnie', ToastAndroid.SHORT);
         })
         .catch(error => {
@@ -65,7 +68,7 @@ function LoginScreen(): JSX.Element {
       auth()
         .signOut()
         .then(() => {
-          setUsr(null);
+          dispatch(setUser(null));
           console.log('User signed out!');
         });
     }
@@ -120,7 +123,6 @@ function LoginScreen(): JSX.Element {
             display: 'flex',
             borderWidth: 2,
             borderRadius: 8,
-
             padding: 5,
             minWidth: '55%',
           }}>

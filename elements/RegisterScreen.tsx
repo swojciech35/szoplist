@@ -4,8 +4,10 @@ import auth from '@react-native-firebase/auth';
 import {TextInput} from 'react-native-element-textinput';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-
+import {setUser} from '../redux/userSlice';
+import {useAppSelector, useAppDispatch} from '../hooks';
 function RegisterScreen(): JSX.Element {
+  const dispatch = useAppDispatch();
   const [usr, setUsr] = React.useState<any>(null);
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
@@ -18,6 +20,7 @@ function RegisterScreen(): JSX.Element {
         .then(() => {
           console.log('User account created & signed in!');
           setUsr(auth().currentUser);
+          dispatch(setUser(auth().currentUser));
           ToastAndroid.show('Zarejestrowano i zalogowano', ToastAndroid.SHORT);
         })
         .catch(error => {
