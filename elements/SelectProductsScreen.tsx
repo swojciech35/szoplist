@@ -5,8 +5,9 @@ import { TextInput} from 'react-native-gesture-handler';
 import {TouchableOpacity} from 'react-native';
 import CustomCheckbox from './CustomCheckbox';
 import allProducts from './allProducts';
+import { SelectProductsScreenProps } from 'navTypes';
 
-function SelectProductsScreen(): JSX.Element {
+function SelectProductsScreen({route,navigation} : SelectProductsScreenProps): JSX.Element {
 
 const [list, setList] = useState(allProducts);    
 const [openTabs,setTabs] = useState(new Array(list.length).fill(false))
