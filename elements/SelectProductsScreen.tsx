@@ -4,19 +4,13 @@ import { useState } from 'react';
 import { TextInput} from 'react-native-gesture-handler';
 import {TouchableOpacity} from 'react-native';
 import CustomCheckbox from './CustomCheckbox';
+import allProducts from './allProducts';
+
 function SelectProductsScreen(): JSX.Element {
 
-     var allProducts = 
-     [{category: "warzywa i owoce", products: [{name: "banany", checked: false},{name: "pomarańcze", checked: false},{name: "cytryna", checked: false},{name: "cebula", checked: false},{name: "jabłka", checked: false},{name: "ziemniaki", checked: false}]},
-     {category: "nabiał",products: [{name: "jogurt", checked: false},{name: "masło", checked: false},{name: "śmietana", checked: false},{name: "ser", checked: false}]},{category: "mięso i wędliny",products: [{name: "kiełbasa", checked: false},{name: "wędlina", checked: false},{name: "parówki", checked: false},{name: "filet z kurczaka", checked: false},{name: "mięso mielone", checked: false}]},
-     {category: "napoje",products: [{name: "sok", checked: false},{name: "woda niegazowana", checked: false},{name: "woda gazowana", checked: false},{name: "oranżada", checked: false},{name: "wino czerwone", checked: false},{name: "wino białe", checked: false}]},
-     {category: "przekąski",products: [{name: "paluszki", checked: false},{name: "popcorn", checked: false},{name: "talarki", checked: false},{name: "herbatniki", checked: false},{name: "prażynki", checked: false}]},
-{category:"inne", products: [{name:"zabawki", checked: false}]}];
-
-
-const [openTabs,setTabs] = useState(new Array(allProducts.length).fill(false))
-const [markedProducts, setMarked] = useState(new Array(allProducts.length).fill(null).map((item,index) => Array(allProducts[index].products.length).fill(false)))
-const [list, setList] = useState(allProducts);
+const [list, setList] = useState(allProducts);    
+const [openTabs,setTabs] = useState(new Array(list.length).fill(false))
+const [markedProducts, setMarked] = useState(new Array(list.length).fill(null).map((item,index) => Array(list[index].products.length).fill(false)))
 const [newProductWindow, setWindow] = useState(false);
 const [newProductCategoryIndex, setCategoryIndex] = useState(0);
 const [newProductName,setName] = useState("");
