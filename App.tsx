@@ -9,12 +9,15 @@ import LoginScreen from './elements/LoginScreen';
 import RegisterScreen from './elements/RegisterScreen';
 import {setUser} from './redux/userSlice';
 import {useAppSelector, useAppDispatch} from './hooks';
+import {getData} from './function/async-storage';
 const Drawer = createDrawerNavigator();
 
 function App(): JSX.Element {
   const dispatch = useAppDispatch();
   React.useEffect(() => {
-    dispatch(setUser({test: 'useeffect'}));
+    getData('@User').then(value => {
+      dispatch(setUser(value));
+    });
   }, []);
   return (
     <NavigationContainer>

@@ -8,6 +8,7 @@ import React from 'react';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {setUser} from '../redux/userSlice';
 import {useAppSelector, useAppDispatch} from '../hooks';
+import {storeData} from '../function/async-storage';
 function LoginScreen(): JSX.Element {
   const usr = useAppSelector(state => state.user.userData);
   const dispatch = useAppDispatch();
@@ -18,9 +19,12 @@ function LoginScreen(): JSX.Element {
     await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true});
     const {idToken} = await GoogleSignin.signIn();
     const googleCredential = auth.GoogleAuthProvider.credential(idToken);
-    dispatch(setUser(auth().currentUser));
-
-    return auth().signInWithCredential(googleCredential);
+    auth()
+      .signInWithCredential(googleCredential)
+      .then(() => {
+        dispatch(setUser(auth().currentUser));
+        storeData('@User', auth().currentUser);
+      });
   }
 
   async function emailLogin() {
@@ -30,6 +34,7 @@ function LoginScreen(): JSX.Element {
         .then(() => {
           console.log('User login succesfull');
           dispatch(setUser(auth().currentUser));
+          storeData('@User', auth().currentUser);
           ToastAndroid.show('Zalogowano pomyślnie', ToastAndroid.SHORT);
         })
         .catch(error => {
@@ -69,6 +74,7 @@ function LoginScreen(): JSX.Element {
         .signOut()
         .then(() => {
           dispatch(setUser(null));
+          storeData('@User', null);
           console.log('User signed out!');
         });
     }

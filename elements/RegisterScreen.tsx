@@ -6,9 +6,9 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {setUser} from '../redux/userSlice';
 import {useAppSelector, useAppDispatch} from '../hooks';
+import {storeData} from '../function/async-storage';
 function RegisterScreen(): JSX.Element {
   const dispatch = useAppDispatch();
-  const [usr, setUsr] = React.useState<any>(null);
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [passwordRepeat, setPasswordRepeat] = React.useState('');
@@ -19,8 +19,8 @@ function RegisterScreen(): JSX.Element {
         .createUserWithEmailAndPassword(email, password)
         .then(() => {
           console.log('User account created & signed in!');
-          setUsr(auth().currentUser);
           dispatch(setUser(auth().currentUser));
+          storeData('@User', auth().currentUser);
           ToastAndroid.show('Zarejestrowano i zalogowano', ToastAndroid.SHORT);
         })
         .catch(error => {
