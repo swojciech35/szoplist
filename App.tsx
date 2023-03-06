@@ -8,16 +8,7 @@ import ShopList from './elements/ShopList';
 import LoginScreen from './elements/LoginScreen';
 import RegisterScreen from './elements/RegisterScreen';
 
-
-export type RootStackParamList ={
-  "Home": undefined;
-  "Create New List": {list : object};
-  "Select products screen": {list: object};
-  "Show List": {listId: string};
-  "Login": undefined;
-  "Register": undefined;
-}
-
+import { RootStackParamList } from 'navTypes';
 
 const Drawer = createDrawerNavigator<RootStackParamList>();
 
@@ -26,8 +17,8 @@ function App(): JSX.Element {
     <NavigationContainer>
       <Drawer.Navigator initialRouteName="Home">
         <Drawer.Screen name="Home" component={HomeScreen} />
-        <Drawer.Screen name="Create New List" component={CreateShopList} initialParams={{list: ["wziuuuuuu"]}}/>
-        <Drawer.Screen name="Select products screen" component={SelectProductsScreen} />
+        <Drawer.Screen name="Create New List" component={CreateShopList} initialParams={{list: []}}/>
+        <Drawer.Screen name="Select products screen" component={SelectProductsScreen} initialParams={{list: []}} />
         <Drawer.Screen name="Show List" component={ShopList} />
         <Drawer.Screen name="Login" component={LoginScreen} />
         <Drawer.Screen name="Register" component={RegisterScreen} />

@@ -9,7 +9,14 @@ import { SelectProductsScreenProps } from 'navTypes';
 
 function SelectProductsScreen({route,navigation} : SelectProductsScreenProps): JSX.Element {
 
-const [list, setList] = useState(allProducts);    
+var previousList = (route.params.list);
+
+
+var listWithProducts = allProducts();
+
+console.log("dzieje sie");
+
+const [list, setList] = useState(listWithProducts);   
 const [openTabs,setTabs] = useState(new Array(list.length).fill(false))
 const [markedProducts, setMarked] = useState(new Array(list.length).fill(null).map((item,index) => Array(list[index].products.length).fill(false)))
 const [newProductWindow, setWindow] = useState(false);
@@ -30,6 +37,27 @@ setMarked(check  => check.map((itemC,indexC) => indexC === catIndex ? (check[ind
 }
 
 const changeTabs = (ifOpen:boolean) => {setTabs(check => check.map(() => ifOpen))}
+
+useEffect(()=>
+{
+if (previousList != null){
+list.map((defaultCategory,index) => {previousList.map((previousListCategory) => {if (defaultCategory.category === previousListCategory.category){
+     for (var i=0;i<previousListCategory.products.length;i++){
+          for (var j=0;j<defaultCategory.products.length;j++){
+               if (previousListCategory.products[i].name === defaultCategory.products[j].name){
+                    markProduct(index,j)
+                    break;
+               }
+
+               if (j == defaultCategory.products.length - 1){
+addProduct(previousListCategory.products[i].name, index);
+               }
+               
+          }
+     }
+}})})}
+},[])
+
 
 const addProduct = (name:string, catIndex:number) =>{
      let newProduct = {"name": name, checked:false};
@@ -62,7 +90,7 @@ for (var i=list.length-1;i>=0;i--){
           tmp.splice(i,1);
      }
 }
-     console.log(tmp);
+     console.log(tmp[0].products);
 }
 
 return (
