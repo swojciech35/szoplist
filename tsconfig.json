@@ -1,4 +1,8 @@
 {
   "extends": "@tsconfig/react-native/tsconfig.json",
-  "compilerOptions": {"baseUrl": "./"}
+  "compilerOptions": {"baseUrl": "."},
+  "paths":{
+    "function":["function/*"]
+  }
 }
+

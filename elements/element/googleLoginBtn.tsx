@@ -5,7 +5,7 @@ import React from 'react';
 import {setUser} from '../../redux/userSlice';
 import {useAppSelector, useAppDispatch} from '../../hooks';
 import {storeData} from '../../function/async-storage';
-
+import {addNewUserToDatabase} from 'function/database';
 function GoogleLoginBtn(): JSX.Element {
   const dispatch = useAppDispatch();
   async function onGoogleButtonPress() {
@@ -17,6 +17,10 @@ function GoogleLoginBtn(): JSX.Element {
       .then(() => {
         dispatch(setUser(auth().currentUser));
         storeData('@User', auth().currentUser);
+        addNewUserToDatabase(
+          auth().currentUser?.uid,
+          auth().currentUser?.email,
+        );
       });
   }
   return (
