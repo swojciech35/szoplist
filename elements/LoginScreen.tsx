@@ -1,31 +1,18 @@
 import {View, Text, ToastAndroid} from 'react-native';
 import {Button} from 'react-native';
 import auth from '@react-native-firebase/auth';
-import {GoogleSignin} from '@react-native-google-signin/google-signin';
-import {GoogleSigninButton} from '@react-native-google-signin/google-signin';
 import {TextInput} from 'react-native-element-textinput';
 import React from 'react';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {setUser} from '../redux/userSlice';
 import {useAppSelector, useAppDispatch} from '../hooks';
 import {storeData} from '../function/async-storage';
+import GoogleLoginBtn from './element/googleLoginBtn';
 function LoginScreen(): JSX.Element {
   const usr = useAppSelector(state => state.user.userData);
   const dispatch = useAppDispatch();
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
-
-  async function onGoogleButtonPress() {
-    await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true});
-    const {idToken} = await GoogleSignin.signIn();
-    const googleCredential = auth.GoogleAuthProvider.credential(idToken);
-    auth()
-      .signInWithCredential(googleCredential)
-      .then(() => {
-        dispatch(setUser(auth().currentUser));
-        storeData('@User', auth().currentUser);
-      });
-  }
 
   async function emailLogin() {
     if (email.length > 0 && password.length > 0) {
@@ -139,14 +126,7 @@ function LoginScreen(): JSX.Element {
           </Text>
         </TouchableOpacity>
         <Text style={{fontSize: 20, color: 'black', margin: 20}}>LUB</Text>
-        <GoogleSigninButton
-          style={{width: '55%', height: 48}}
-          onPress={() =>
-            onGoogleButtonPress().then(() =>
-              console.log('Signed in with Google!'),
-            )
-          }
-        />
+        <GoogleLoginBtn />
         <Button title="User data" onPress={() => console.log(usr)} />
         <Button title="Wyloguj" onPress={() => signOut()} />
       </View>

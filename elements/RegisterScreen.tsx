@@ -7,6 +7,7 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {setUser} from '../redux/userSlice';
 import {useAppSelector, useAppDispatch} from '../hooks';
 import {storeData} from '../function/async-storage';
+import GoogleLoginBtn from './element/googleLoginBtn';
 function RegisterScreen(): JSX.Element {
   const dispatch = useAppDispatch();
   const [email, setEmail] = React.useState('');
@@ -137,6 +138,7 @@ function RegisterScreen(): JSX.Element {
             Zarejestruj się
           </Text>
         </TouchableOpacity>
+        <GoogleLoginBtn/>
       </View>
     </>
   );
