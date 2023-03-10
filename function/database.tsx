@@ -26,9 +26,7 @@ export const getUserLists = (userId: string) =>
     .ref(`/user/${userId}/list`)
     .once('value')
     .then(snapshot => {
-      console.log(snapshot.val())
       return snapshot.val();
-      
     });
 
 export const getUserSharedLists = (userId: string) =>
@@ -38,3 +36,7 @@ export const getUserSharedLists = (userId: string) =>
     .then(snapshot => {
       return snapshot.val();
     });
+
+export const addNewList = (userId: string, listId: string, list: object) => {
+  databaseConnect.ref(`/user/${userId}/list/${listId}`).set(list);
+};
