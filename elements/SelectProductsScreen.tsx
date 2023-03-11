@@ -39,7 +39,7 @@ function SelectProductsScreen({
         ? cat.products.map((prod, prodIndex) => (
             <View style={{flexDirection: 'row'}} key={'P' + prodIndex}>
               <TouchableOpacity
-                style={{flexDirection: 'row'}}
+                style={{flexDirection: 'row', width: '100%'}}
                 onPress={() => {
                   markProduct(catIndex, prodIndex);
                 }}>
@@ -99,7 +99,6 @@ function SelectProductsScreen({
     setTabs(check => check.map((item, idx) => (idx === index ? !item : item)));
   };
   const markProduct = (catIndex: number, prodIndex: number) => {
-    console.log('markowanie ', list[catIndex].products[prodIndex].name);
     setMarked(check =>
       check.map((itemC, indexC) =>
         indexC === catIndex
@@ -117,15 +116,11 @@ function SelectProductsScreen({
 
   useEffect(() => {
     if (previousList != null) {
-      // previousList.forEach(element => console.log(element));
       list.forEach((defaultCategory, index) => {
         previousList.forEach(previousListCategory => {
           if (defaultCategory.category === previousListCategory.category) {
-            console.log('ifff', previousListCategory.category);
             for (var i = 0; i < previousListCategory.products.length; i++) {
-              console.log('for', i, '- previouslistcategory');
               for (var j = 0; j < defaultCategory.products.length; j++) {
-                console.log('for', j, '- defaultcategory');
                 if (
                   previousListCategory.products[i].name ===
                   defaultCategory.products[j].name
@@ -145,11 +140,8 @@ function SelectProductsScreen({
       list.forEach((defaultCategory, index) => {
         previousList.forEach(previousListCategory => {
           if (defaultCategory.category === previousListCategory.category) {
-            console.log('ifff', previousListCategory.category);
             for (var i = 0; i < previousListCategory.products.length; i++) {
-              console.log('for', i, '- previouslistcategory');
               for (var j = 0; j < defaultCategory.products.length; j++) {
-                console.log('for', j, '- defaultcategory');
                 if (
                   previousListCategory.products[i].name ===
                   defaultCategory.products[j].name
@@ -187,19 +179,16 @@ function SelectProductsScreen({
     for (var i = list.length - 1; i >= 0; i--) {
       for (var j = list[i].products.length - 1; j >= 0; j--) {
         if (markedProducts[i][j] == false) {
-          console.log('usuniecie', tmp[i].products[j].name);
           tmp[i].products.splice(j, 1);
         }
       }
 
       if (tmp[i].products.length == 0) {
-        console.log('usuniecie kat', tmp[i].category);
         tmp.splice(i, 1);
       }
     }
+
     navigation.navigate('Create New List', {list: tmp});
-    console.log('LISTAAA TMP', list);
-    console.log('LISTAAA', list);
   };
 
   return (

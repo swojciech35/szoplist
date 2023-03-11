@@ -11,10 +11,14 @@ import {TextInput} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 
 function CreateShopList({route, navigation}: CreateShopListProps): JSX.Element {
-  const [list, setList] = useState(route.params.list);
+  const list = route.params.list;
   const [listName, setName] = useState('');
 
-  var mappedList = list.map(category =>
+  const createList = () => {
+    return {name: listName, listOfProducts: list};
+  };
+
+  let mappedList = list.map(category =>
     category.products.map(product => (
       <Text key={product.name}>
         {product.name} ({category.category})
@@ -22,7 +26,6 @@ function CreateShopList({route, navigation}: CreateShopListProps): JSX.Element {
     )),
   );
 
-  console.log('CreateShopList: ', list);
   return (
     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
       <Text style={{color: 'black'}}>Create Shop List Screen</Text>
@@ -36,7 +39,14 @@ function CreateShopList({route, navigation}: CreateShopListProps): JSX.Element {
         onPress={() => {
           navigation.navigate('Select products screen', {list: list});
         }}>
-        <Text>EDYTUJ LISTĘ</Text>
+        <Text>WYBIERZ/EDYTUJ PRODUKTY</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => {
+          console.log(createList());
+          navigation.navigate('Home');
+        }}>
+        <Text>UTWÓRZ LISTĘ</Text>
       </TouchableOpacity>
     </View>
   );
