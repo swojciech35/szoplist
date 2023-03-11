@@ -40,3 +40,7 @@ export const getUserSharedLists = (userId: string) =>
 export const addNewList = (userId: string, listId: string, list: object) => {
   databaseConnect.ref(`/user/${userId}/list/${listId}`).set(list);
 };
+
+export const shareList = (userId: string, listId: string, list: object) => {
+  databaseConnect.ref(`/user/${userId}/sharedList/${listId}`).set(list);
+};
