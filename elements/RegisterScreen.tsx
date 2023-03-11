@@ -8,6 +8,7 @@ import {setUser} from '../redux/userSlice';
 import {useAppSelector, useAppDispatch} from '../hooks';
 import {storeData} from '../function/async-storage';
 import GoogleLoginBtn from './element/googleLoginBtn';
+import {addNewUserToDatabase} from 'function/database';
 function RegisterScreen(): JSX.Element {
   const dispatch = useAppDispatch();
   const [email, setEmail] = React.useState('');
@@ -22,6 +23,10 @@ function RegisterScreen(): JSX.Element {
           console.log('User account created & signed in!');
           dispatch(setUser(auth().currentUser));
           storeData('@User', auth().currentUser);
+          addNewUserToDatabase(
+            auth().currentUser?.uid,
+            auth().currentUser?.email,
+          );
           ToastAndroid.show('Zarejestrowano i zalogowano', ToastAndroid.SHORT);
         })
         .catch(error => {
@@ -138,7 +143,7 @@ function RegisterScreen(): JSX.Element {
             Zarejestruj się
           </Text>
         </TouchableOpacity>
-        <GoogleLoginBtn/>
+        <GoogleLoginBtn />
       </View>
     </>
   );
