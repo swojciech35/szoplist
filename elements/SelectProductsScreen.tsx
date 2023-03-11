@@ -4,7 +4,7 @@ import {useState} from 'react';
 import {TextInput} from 'react-native-gesture-handler';
 import {TouchableOpacity} from 'react-native';
 import CustomCheckbox from './CustomCheckbox';
-import allProducts, {tab1, tab2} from './allProducts';
+import allProducts from './allProducts';
 import {SelectProductsScreenProps} from 'navTypes';
 
 function SelectProductsScreen({
@@ -14,24 +14,16 @@ function SelectProductsScreen({
   const previousList = route.params.list;
 
   const [list, setList] = useState(allProducts());
-  const [openTabs, setTabs] = useState([
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-  ]);
-  const [markedProducts, setMarked] = useState([
-    [false, false, false, false, false, false, false],
-    [false, false, false, false, false, false],
-    [false, false, false, false, false, false],
-    [false, false, false, false, false, false, false, false, false],
-    [false, false, false, false, false],
-    [false, false, false, false, false, false, false, false, false, false],
-    [false, false],
-  ]);
+  const [openTabs, setTabs] = useState(
+    new Array(allProducts().length).fill(false),
+  );
+  const [markedProducts, setMarked] = useState(
+    new Array(allProducts().length)
+      .fill(null)
+      .map((item, index) =>
+        Array(allProducts()[index].products.length).fill(false),
+      ),
+  );
   const [newProductWindow, setWindow] = useState(false);
   const [newProductCategoryIndex, setCategoryIndex] = useState(0);
   const [newProductName, setName] = useState('');

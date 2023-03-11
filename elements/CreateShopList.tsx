@@ -15,9 +15,9 @@ function CreateShopList({route, navigation}: CreateShopListProps): JSX.Element {
   const [listName, setName] = useState('');
 
   var mappedList = list.map(category =>
-    category.products.map(item => (
-      <Text key={item.name}>
-        {item.name} ({category.category})
+    category.products.map(product => (
+      <Text key={product.name}>
+        {product.name} ({category.category})
       </Text>
     )),
   );
