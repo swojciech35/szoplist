@@ -15,3 +15,10 @@ const allProducts = () =>
     return listOfProducts;}
 
     export default allProducts;
+
+    export const tab1 = () => {
+        let arr = new Array(allProducts().length).fill(false);
+        console.log("ROBIE SIE");
+        return arr;}
+    export const tab2 = () => {return new Array(allProducts().length).fill(null).map((item,index) => Array(allProducts()[index].products.length).fill(false));}
+    
