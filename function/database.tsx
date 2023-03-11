@@ -48,3 +48,6 @@ export const shareList = (userId: string, listId: string, list: object) => {
 export const deleteList = (userId: string, listId: string) => {
   databaseConnect.ref(`/user/${userId}/list/${listId}`).remove();
 };
+export const deleteSharedList = (userId: string, listId: string) => {
+  databaseConnect.ref(`/user/${userId}/sharedList/${listId}`).remove();
+};
