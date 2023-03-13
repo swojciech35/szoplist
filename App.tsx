@@ -10,12 +10,14 @@ import RegisterScreen from './elements/RegisterScreen';
 import {setUser} from './redux/userSlice';
 import {useAppSelector, useAppDispatch} from './hooks';
 import {getData} from './function/async-storage';
-import SplashScreen from 'react-native-splash-screen'
+import SplashScreen from 'react-native-splash-screen';
+import {checkInternetConnection} from 'function/internet';
 const Drawer = createDrawerNavigator();
 
 function App(): JSX.Element {
   const dispatch = useAppDispatch();
   React.useEffect(() => {
+    dispatch(checkInternetConnection());
     SplashScreen.hide();
     getData('@User').then(value => {
       dispatch(setUser(value));

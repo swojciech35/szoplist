@@ -1,9 +1,10 @@
 import {configureStore} from '@reduxjs/toolkit';
 import userReducer from './userSlice';
-
+import internetReducer from './internetSlice'
 const store = configureStore({
   reducer: {
     user: userReducer,
+    internet:internetReducer,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
