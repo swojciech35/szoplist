@@ -58,13 +58,17 @@ function SelectProductsScreen({
     <TouchableOpacity
       key={'CM' + index}
       style={{
-        backgroundColor:
-          index === newProductCategoryIndex ? 'lightgreen' : 'white',
+        width: '100%',
       }}
       onPress={() => {
         setCategoryIndex(index);
       }}>
-      <Text> {cat}</Text>
+      <Text
+        style={{
+          fontWeight: index === newProductCategoryIndex ? 'bold' : 'normal',
+        }}>
+        {cat}
+      </Text>
     </TouchableOpacity>
   ));
   const modal = (
@@ -201,7 +205,7 @@ function SelectProductsScreen({
         <Text>rozwiń wszystkie</Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={() => createList()}>
-        <Text>wyświetl liste</Text>
+        <Text>utwórz liste</Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={() => setWindow(!newProductWindow)}>
         <Text>dodaj produkt</Text>
@@ -218,19 +222,18 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 22,
   },
   modalView: {
     margin: 20,
     backgroundColor: 'white',
     borderRadius: 20,
-    padding: 35,
+    padding: 15,
     alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 2,
     },
-    elevation: 30,
+    elevation: 20,
   },
 });
