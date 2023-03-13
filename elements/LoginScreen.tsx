@@ -1,6 +1,5 @@
 import {View, Text, ToastAndroid, SafeAreaView} from 'react-native';
 import auth from '@react-native-firebase/auth';
-import {TextInput} from 'react-native-element-textinput';
 import React from 'react';
 import {setUser} from '../redux/userSlice';
 import {useAppSelector, useAppDispatch} from '../hooks';

@@ -1,22 +1,26 @@
 import React from 'react';
-import {View, Text, ToastAndroid} from 'react-native';
+import {View, Text, ToastAndroid, SafeAreaView} from 'react-native';
 import auth from '@react-native-firebase/auth';
-import {TextInput} from 'react-native-element-textinput';
-import {TouchableOpacity} from 'react-native-gesture-handler';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {setUser} from '../redux/userSlice';
 import {useAppSelector, useAppDispatch} from '../hooks';
 import {storeData} from '../function/async-storage';
 import GoogleLoginBtn from './element/googleLoginBtn';
 import {addNewUserToDatabase} from 'function/database';
-function RegisterScreen(): JSX.Element {
+import CustomTextInput from './element/CustomTextInput';
+import Btn from './element/Btn';
+function RegisterScreen({navigation}: any): JSX.Element {
   const dispatch = useAppDispatch();
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [passwordRepeat, setPasswordRepeat] = React.useState('');
 
   async function emailAddUserAndLogin() {
-    if (password === passwordRepeat) {
+    if (
+      password === passwordRepeat &&
+      email.length > 0 &&
+      password.length > 0 &&
+      passwordRepeat.length > 0
+    ) {
       auth()
         .createUserWithEmailAndPassword(email, password)
         .then(() => {
@@ -28,6 +32,7 @@ function RegisterScreen(): JSX.Element {
             auth().currentUser?.email,
           );
           ToastAndroid.show('Zarejestrowano i zalogowano', ToastAndroid.SHORT);
+          navigation.navigate('Home');
         })
         .catch(error => {
           if (error.code === 'auth/email-already-in-use') {
@@ -53,98 +58,55 @@ function RegisterScreen(): JSX.Element {
           console.error(error);
         });
     } else {
-      ToastAndroid.show('Hasła się różnią', ToastAndroid.SHORT);
+      ToastAndroid.show('Sprawdź dane do rejestracji', ToastAndroid.SHORT);
     }
   }
   return (
     <>
-      <KeyboardAwareScrollView>
-        <View style={{alignItems: 'center', margin: 20}}>
-          <Text style={{color: 'black', fontSize: 40}}>REJESTRACJA</Text>
-        </View>
-        <View>
-          <TextInput
-            style={{
-              flex: 1,
-              maxHeight: 80,
-              minHeight: 65,
-              marginTop: 15,
-              marginLeft: 20,
-              marginRight: 20,
-              paddingHorizontal: 12,
-              borderRadius: 8,
-              borderWidth: 1,
-              borderColor: '#000000',
-            }}
+      <SafeAreaView style={{flex: 1, backgroundColor: '#739FB7'}}>
+        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+          <Text style={{color: 'black', fontSize: 40}}>ZAREJESTRUJ SIĘ</Text>
+
+          <CustomTextInput
             placeholder="Email"
             onChangeText={setEmail}
             value={email}
             label="Email"
-            labelStyle={{color: 'black'}}
-            placeholderStyle={{color: 'gray'}}
           />
-          <TextInput
-            style={{
-              flex: 1,
-              maxHeight: 80,
-              minHeight: 65,
-              marginTop: 15,
-              marginLeft: 20,
-              marginRight: 20,
-              paddingHorizontal: 12,
-              borderRadius: 8,
-              borderWidth: 1,
-              borderColor: '#000000',
-            }}
+
+          <CustomTextInput
             placeholder="Hasło"
             onChangeText={setPassword}
             value={password}
             mode="password"
             label="Hasło"
-            labelStyle={{color: 'black'}}
-            placeholderStyle={{color: 'gray'}}
           />
-          <TextInput
-            style={{
-              flex: 1,
-              maxHeight: 80,
-              minHeight: 65,
-              marginTop: 15,
-              marginLeft: 20,
-              marginRight: 20,
-              marginBottom: 20,
-              paddingHorizontal: 12,
-              borderRadius: 8,
-              borderWidth: 1,
-              borderColor: '#000000',
-            }}
+
+          <CustomTextInput
             placeholder="Hasło"
             onChangeText={setPasswordRepeat}
             value={passwordRepeat}
             mode="password"
             label="Hasło"
-            labelStyle={{color: 'black'}}
-            placeholderStyle={{color: 'gray'}}
           />
-        </View>
-      </KeyboardAwareScrollView>
-      <View style={{flex: 2, alignItems: 'center', display: 'flex'}}>
-        <TouchableOpacity
-          style={{
-            display: 'flex',
-            borderWidth: 2,
-            borderRadius: 8,
-            padding: 5,
-            minWidth: '55%',
-          }}>
-          <Text
-            style={{fontSize: 20, color: 'black', textAlign: 'center'}}
-            onPress={() => emailAddUserAndLogin()}>
-            Zarejestruj się
+          <Btn
+            name={'Zarejestruj się'}
+            function={() => emailAddUserAndLogin()}
+            minWidth={'65%'}
+          />
+
+          <Text style={{fontSize: 20, color: 'black', margin: 20}}>
+            Masz już konto?
           </Text>
-        </TouchableOpacity>
-        <GoogleLoginBtn />
-      </View>
+
+          <Btn
+            name={'Zaloguj się'}
+            function={() => navigation.navigate('Login')}
+            minWidth={'65%'}
+          />
+          <GoogleLoginBtn navigation={navigation} />
+        </View>
+      </SafeAreaView>
     </>
   );
 }
