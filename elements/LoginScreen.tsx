@@ -1,14 +1,14 @@
-import {View, Text, ToastAndroid} from 'react-native';
-import {Button} from 'react-native';
+import {View, Text, ToastAndroid, SafeAreaView} from 'react-native';
 import auth from '@react-native-firebase/auth';
 import {TextInput} from 'react-native-element-textinput';
 import React from 'react';
-import {TouchableOpacity} from 'react-native-gesture-handler';
 import {setUser} from '../redux/userSlice';
 import {useAppSelector, useAppDispatch} from '../hooks';
 import {storeData} from '../function/async-storage';
 import GoogleLoginBtn from './element/googleLoginBtn';
-function LoginScreen(): JSX.Element {
+import Btn from './element/Btn';
+import CustomTextInput from './element/CustomTextInput';
+function LoginScreen({navigation}: any): JSX.Element {
   const usr = useAppSelector(state => state.user.userData);
   const dispatch = useAppDispatch();
   const [email, setEmail] = React.useState('');
@@ -23,6 +23,7 @@ function LoginScreen(): JSX.Element {
           dispatch(setUser(auth().currentUser));
           storeData('@User', auth().currentUser);
           ToastAndroid.show('Zalogowano pomyślnie', ToastAndroid.SHORT);
+          navigation.navigate('Home');
         })
         .catch(error => {
           if (error.code === 'auth/user-not-found') {
@@ -69,67 +70,36 @@ function LoginScreen(): JSX.Element {
 
   return (
     <>
-      <View style={{alignItems: 'center', margin: 40}}>
-        <Text style={{color: 'black', fontSize: 50}}>ZALOGUJ SIĘ</Text>
-      </View>
-      <View style={{flex: 1, alignItems: 'center'}}>
-        <TextInput
-          style={{
-            flex: 1,
-            maxHeight: 80,
-            minHeight: 65,
-            margin: 20,
-            paddingHorizontal: 12,
-            borderRadius: 8,
-            borderWidth: 1,
-            borderColor: '#000000',
-          }}
-          placeholder="Email"
-          onChangeText={setEmail}
-          value={email}
-          label="Email"
-          labelStyle={{color: 'black'}}
-          placeholderStyle={{color: 'gray'}}
-        />
-        <TextInput
-          style={{
-            flex: 1,
-            maxHeight: 80,
-            minHeight: 65,
-            margin: 20,
-            paddingHorizontal: 12,
-            borderRadius: 8,
-            borderWidth: 1,
-            borderColor: '#000000',
-          }}
-          placeholder="Hasło"
-          onChangeText={setPassword}
-          value={password}
-          mode="password"
-          label="Hasło"
-          labelStyle={{color: 'black'}}
-          placeholderStyle={{color: 'gray'}}
-        />
-
-        <TouchableOpacity
-          style={{
-            display: 'flex',
-            borderWidth: 2,
-            borderRadius: 8,
-            padding: 5,
-            minWidth: '55%',
-          }}>
-          <Text
-            style={{fontSize: 20, color: 'black', textAlign: 'center'}}
-            onPress={() => emailLogin()}>
-            Zaloguj się
-          </Text>
-        </TouchableOpacity>
-        <Text style={{fontSize: 20, color: 'black', margin: 20}}>LUB</Text>
-        <GoogleLoginBtn />
-        <Button title="User data" onPress={() => console.log(usr)} />
-        <Button title="Wyloguj" onPress={() => signOut()} />
-      </View>
+      <SafeAreaView style={{flex: 1, backgroundColor: '#739FB7'}}>
+        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+          <Text style={{color: 'black', fontSize: 50}}>ZALOGUJ SIĘ</Text>
+          <CustomTextInput
+            placeholder="Email"
+            onChangeText={setEmail}
+            value={email}
+            label="Email"
+          />
+          <CustomTextInput
+            placeholder="Hasło"
+            onChangeText={setPassword}
+            value={password}
+            mode="password"
+            label="Hasło"
+          />
+          <Btn
+            name={'Zaloguj się'}
+            function={() => emailLogin()}
+            minWidth={'65%'}
+          />
+          <GoogleLoginBtn navigation={navigation} />
+          <Text style={{fontSize: 20, color: 'black', margin: 20}}>LUB</Text>
+          <Btn
+            name={'Zarejestruj się'}
+            function={() => navigation.navigate('Register')}
+            minWidth={'65%'}
+          />
+        </View>
+      </SafeAreaView>
     </>
   );
 }

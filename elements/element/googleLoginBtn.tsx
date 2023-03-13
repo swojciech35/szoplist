@@ -6,7 +6,8 @@ import {setUser} from '../../redux/userSlice';
 import {useAppSelector, useAppDispatch} from '../../hooks';
 import {storeData} from '../../function/async-storage';
 import {addNewUserToDatabase} from 'function/database';
-function GoogleLoginBtn(): JSX.Element {
+import Btn from './Btn';
+function GoogleLoginBtn({navigation}:any): JSX.Element {
   const dispatch = useAppDispatch();
   async function onGoogleButtonPress() {
     await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true});
@@ -21,15 +22,22 @@ function GoogleLoginBtn(): JSX.Element {
           auth().currentUser?.uid,
           auth().currentUser?.email,
         );
+        navigation.navigate('Home');
       });
   }
   return (
-    <GoogleSigninButton
-      style={{width: '55%', height: 48}}
-      onPress={() =>
-        onGoogleButtonPress().then(() => console.log('Signed in with Google!'))
-      }
+    // <GoogleSigninButton
+    //   style={{width: '55%', height: 48}}
+    //   onPress={() =>
+    //     onGoogleButtonPress().then(() => console.log('Signed in with Google!'))
+    //   }
+    // />
+    <Btn
+    function={()=>onGoogleButtonPress().then(() => console.log('Signed in with Google!'))}
+    name={"Zaloguj się z Google"}
+    minWidth={"65%"}
+    googleLogo={true}
     />
-  );
+    );
 }
 export default GoogleLoginBtn;
