@@ -12,7 +12,9 @@ import {useAppSelector, useAppDispatch} from './hooks';
 import {getData} from './function/async-storage';
 import SplashScreen from 'react-native-splash-screen';
 import {checkInternetConnection} from 'function/internet';
-const Drawer = createDrawerNavigator();
+
+const Drawer = createDrawerNavigator<RootStackParamList>();
+
 
 function App(): JSX.Element {
   const dispatch = useAppDispatch();
@@ -27,10 +29,19 @@ function App(): JSX.Element {
     <NavigationContainer>
       <Drawer.Navigator initialRouteName="Home">
         <Drawer.Screen name="Home" component={HomeScreen} />
-        <Drawer.Screen name="Create New List" component={CreateShopList} />
+
         <Drawer.Screen
+          options={{unmountOnBlur: true}}
+          name="Create New List"
+          component={CreateShopList}
+          initialParams={{list: []}}
+        />
+        <Drawer.Screen
+          options={{unmountOnBlur: true}}
           name="Select products screen"
           component={SelectProductsScreen}
+          initialParams={{list: []}}
+
         />
         <Drawer.Screen name="Show List" component={ShopList} />
         <Drawer.Screen name="Login" component={LoginScreen} />
