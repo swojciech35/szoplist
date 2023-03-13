@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "808189868500",
+    "project_id": "szoplist-e9866",
+    "storage_bucket": "szoplist-e9866.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:808189868500:android:7318a4bd8ea2c91c0a3e41",
+        "android_client_info": {
+          "package_name": "com.szoplist"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "808189868500-qbc6jq958h0f3ah119efsnbkubsgobka.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.szoplist",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "808189868500-a6ee5k023l90fpc7jdembcu8t4t19fv4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDJzhVj1pa7_ztUe9jRFlvgsHIO8RCMt3U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "808189868500-a6ee5k023l90fpc7jdembcu8t4t19fv4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
