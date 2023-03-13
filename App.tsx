@@ -45,7 +45,7 @@ function App(): JSX.Element {
 
         />
         <Drawer.Screen name="Show List" component={ShopList} />
-        <Drawer.Screen name="Login" component={LoginScreen} />
+        <Drawer.Screen name="Login" component={LoginScreen} options={{headerShown:false}} />
         <Drawer.Screen name="Register" component={RegisterScreen} />
       </Drawer.Navigator>
     </NavigationContainer>
