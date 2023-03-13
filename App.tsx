@@ -11,6 +11,7 @@ import {setUser} from './redux/userSlice';
 import {useAppSelector, useAppDispatch} from './hooks';
 import {getData} from './function/async-storage';
 import SplashScreen from 'react-native-splash-screen';
+import {RootStackParamList} from 'navTypes';
 import {checkInternetConnection} from 'function/internet';
 
 const Drawer = createDrawerNavigator<RootStackParamList>();
