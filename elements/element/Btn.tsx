@@ -1,6 +1,6 @@
-import {Image, Text, View} from 'react-native';
+import {Image, Text, View, TouchableOpacity} from 'react-native';
 import React from 'react';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+// import {TouchableOpacity} from 'react-native-gesture-handler';
 function Btn(props: any): JSX.Element {
   return (
     <TouchableOpacity
@@ -15,7 +15,8 @@ function Btn(props: any): JSX.Element {
         alignItems: 'center',
         flexDirection: 'row',
         justifyContent: 'space-evenly',
-      }}>
+      }}
+      onPress={props.function}>
       {props.googleLogo ? (
         <Image
           source={require('./search.png')}
@@ -23,9 +24,7 @@ function Btn(props: any): JSX.Element {
         />
       ) : null}
 
-      <Text
-        style={{fontSize: 20, color: 'black', textAlign: 'center'}}
-        onPress={props.function}>
+      <Text style={{fontSize: 20, color: 'black', textAlign: 'center'}}>
         {props.name}
       </Text>
     </TouchableOpacity>
