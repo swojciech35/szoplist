@@ -6,6 +6,8 @@ import {TouchableOpacity} from 'react-native';
 import CustomCheckbox from './CustomCheckbox';
 import allProducts from './allProducts';
 import {SelectProductsScreenProps} from 'navTypes';
+import Btn from './element/Btn';
+import CustomTextInput from './element/CustomTextInput';
 
 function SelectProductsScreen({
   route,
@@ -66,8 +68,10 @@ function SelectProductsScreen({
       <Text
         style={{
           fontWeight: index === newProductCategoryIndex ? 'bold' : 'normal',
+          fontSize: 20,
+          color: 'black',
         }}>
-        {cat}
+        {index === newProductCategoryIndex ? '> ' + cat + ' <' : cat}
       </Text>
     </TouchableOpacity>
   ));
@@ -75,25 +79,26 @@ function SelectProductsScreen({
     <Modal visible={newProductWindow} animationType="slide" transparent={true}>
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
-          <Text>wprowadź dane produktu</Text>
-          <View
-            style={{minWidth: '75%', display: 'flex', flexDirection: 'row'}}>
-            <Text>Nazwa:</Text>
-            <TextInput
-              value={newProductName}
-              onChangeText={setName}
-              style={{borderWidth: 2, borderColor: 'black'}}
-            />
-          </View>
-          <Text>Kategoria:</Text>
+          <Text style={{color: 'black', fontSize: 30, marginBottom: 20}}>
+            NOWY PRODUKT
+          </Text>
+
+          <Text style={{color: 'black', fontSize: 20}}>Nazwa:</Text>
+          <CustomTextInput value={newProductName} onChangeText={setName} />
+
+          <Text style={{color: 'black', fontSize: 20, marginBottom: 20}}>
+            Kategoria:
+          </Text>
           {menuOfCategories}
-          <TouchableOpacity
-            onPress={() => {
+
+          <Btn
+            name="Dodaj produkt"
+            minWidth="60%"
+            function={() => {
               setWindow(!newProductWindow);
               addProduct(newProductName, newProductCategoryIndex);
-            }}>
-            <Text>dodaj produkt</Text>
-          </TouchableOpacity>
+            }}
+          />
         </View>
       </View>
     </Modal>
@@ -225,7 +230,7 @@ const styles = StyleSheet.create({
   },
   modalView: {
     margin: 20,
-    backgroundColor: 'white',
+    backgroundColor: '#739FB7',
     borderRadius: 20,
     padding: 15,
     alignItems: 'center',
