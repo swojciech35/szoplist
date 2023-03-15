@@ -56,7 +56,12 @@ function SelectProductsScreen({
         ? cat.products.map((prod, prodIndex) => (
             <View style={{flexDirection: 'row'}} key={'P' + prodIndex}>
               <TouchableOpacity
-                style={{flexDirection: 'row', width: '100%', padding: 2}}
+                style={{
+                  flexDirection: 'row',
+                  width: '100%',
+                  paddingHorizontal: 6,
+                  paddingVertical: 3,
+                }}
                 onPress={() => {
                   markProduct(catIndex, prodIndex);
                 }}>
@@ -242,8 +247,8 @@ function SelectProductsScreen({
         <Btn name="Rozwiń wszystkie" function={() => changeTabs(true)} />
       </View>
       <ScrollView>{listOfCategories}</ScrollView>
-      <Btn name="Utwórz listę" function={() => createList()} />
       <Btn name="Dodaj produkt" function={() => setWindow(!newProductWindow)} />
+      <Btn name="Utwórz listę" function={() => createList()} />
     </SafeAreaView>
   );
 }
@@ -258,8 +263,9 @@ const styles = StyleSheet.create({
   },
   modalView: {
     margin: 20,
-    backgroundColor: '#739FB7',
+    backgroundColor: '#5a8196',
     borderRadius: 20,
+    borderWidth: 2,
     padding: 15,
     alignItems: 'center',
     shadowColor: '#000',
