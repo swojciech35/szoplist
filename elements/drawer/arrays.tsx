@@ -12,4 +12,3 @@ export const ScreenArray=[
     {route: "Login",label:'Zaloguj się ',component:LoginScreen,initialParams:{},unmountOnBlur: false,headerShown:false,iconName:'log-in',iconType:"feather",display:false},
     {route: "Register",label:'Zarejestruj się ',component:RegisterScreen,initialParams:{},unmountOnBlur: false,headerShown:false,iconName:'app-registration',iconType:"",display:false},
 ]
-
