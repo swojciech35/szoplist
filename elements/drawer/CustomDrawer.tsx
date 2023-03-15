@@ -2,12 +2,21 @@ import {
   DrawerContentScrollView,
   useDrawerProgress,
 } from '@react-navigation/drawer';
-import React from 'react';
+import React, {useReducer} from 'react';
 import {Icon} from 'react-native-elements';
 import {View, Text, Image, TouchableOpacity} from 'react-native';
-import Animated, {interpolate, useAnimatedStyle} from 'react-native-reanimated';
+import Animated, {
+  interpolate,
+  useAnimatedStyle,
+  useDerivedValue,
+  withSpring,
+} from 'react-native-reanimated';
 import Btn from 'elements/element/Btn';
-
+import {useAppSelector, useAppDispatch} from '../../hooks';
+import GoogleLoginBtn from 'elements/element/googleLoginBtn';
+import auth from '@react-native-firebase/auth';
+import {setUser} from '../../redux/userSlice';
+import {storeData} from '../../function/async-storage';
 const DrawerItem = ({
   title,
   onPress,
@@ -44,9 +53,22 @@ const DrawerItem = ({
 };
 
 const CustomDrawer = (props: any): JSX.Element => {
+  const dispatch = useAppDispatch();
+
+  function signOut() {
+    if (usr != null) {
+      auth()
+        .signOut()
+        .then(() => {
+          dispatch(setUser(null));
+          storeData('@User', null);
+          console.log('User signed out!');
+        });
+    }
+  }
   const {state, descriptors, navigation} = props;
   const drawerProgress = useDrawerProgress() as Animated.SharedValue<number>;
-
+  const usr: any = useAppSelector(state => state.user.userData);
   const animation1 = (type: string) =>
     useAnimatedStyle(() => {
       const val = type === 'top' ? -100 : 100;
@@ -57,6 +79,15 @@ const CustomDrawer = (props: any): JSX.Element => {
         opacity,
       };
     });
+  const [show, toggleFooter] = useReducer(s => !s, false);
+
+  const progress = useDerivedValue(() => {
+    return show ? withSpring(1) : withSpring(0);
+  });
+  const animation2 = useAnimatedStyle(() => {
+    const scaleY = interpolate(progress.value, [0, 1], [0, 1]);
+    return {transform: [{scaleY}]};
+  });
 
   return (
     <View style={{flex: 1}}>
@@ -129,10 +160,9 @@ const CustomDrawer = (props: any): JSX.Element => {
           })}
         </View>
       </DrawerContentScrollView>
-
       <Animated.View
         style={[
-          animation1('bottom'),
+          animation2,
           {
             backgroundColor: '#739FB7',
             paddingVertical: 10,
@@ -141,15 +171,80 @@ const CustomDrawer = (props: any): JSX.Element => {
             borderWidth: 2,
           },
         ]}>
-        <Btn
-          name={'Zaloguj się'}
-          function={() => props.navigation.navigate('Login')}
-        />
-        <Btn
-          name={'Zarejestruj się'}
-          function={() => props.navigation.navigate('Register')}
-        />
+        {usr != null ? (
+          <Btn
+            name={'Wyloguj się'}
+            function={() => {
+              signOut();
+            }}
+          />
+        ) : (
+          <>
+            <Btn
+              name={'Zaloguj się '}
+              function={() => {
+                props.navigation.navigate('Login');
+                toggleFooter();
+              }}
+            />
+            <GoogleLoginBtn navigation={navigation} />
+
+            <Btn
+              name={'Zarejestruj się'}
+              function={() => {
+                props.navigation.navigate('Register');
+                toggleFooter();
+              }}
+            />
+          </>
+        )}
       </Animated.View>
+      <TouchableOpacity onPress={() => toggleFooter()}>
+        <Animated.View
+          style={[
+            animation1('bottom'),
+            {
+              backgroundColor: '#739FB7',
+              paddingVertical: 8,
+              borderRadius: 16,
+              marginBottom: 10,
+              borderWidth: 2,
+            },
+          ]}>
+          {usr != null ? (
+            <View style={{alignItems: 'center'}}>
+              <Icon
+                name={show ? 'keyboard-arrow-down' : 'keyboard-arrow-up'}
+                type={'AntDesign'}
+                color={'#000000'}
+                size={20}
+              />
+              <Text
+                style={{fontSize: 20, color: '#000000', marginVertical: 10}}>
+                ZALOGOWANY SZOP
+              </Text>
+              <Text style={{fontSize: 15, color: '#000000', marginBottom: 10}}>
+                {usr.email}
+              </Text>
+            </View>
+          ) : (
+            <>
+              <View style={{alignItems: 'center'}}>
+                <Icon
+                  name={show ? 'keyboard-arrow-down' : 'keyboard-arrow-up'}
+                  type={'AntDesign'}
+                  color={'#000000'}
+                  size={20}
+                />
+                <Text
+                  style={{fontSize: 20, color: '#000000', marginBottom: 10}}>
+                  DOŁĄCZ DO SZOPÓW
+                </Text>
+              </View>
+            </>
+          )}
+        </Animated.View>
+      </TouchableOpacity>
     </View>
   );
 };

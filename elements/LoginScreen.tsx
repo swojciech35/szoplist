@@ -55,18 +55,6 @@ function LoginScreen({navigation}: any): JSX.Element {
     }
   }
 
-  function signOut() {
-    if (usr != null) {
-      auth()
-        .signOut()
-        .then(() => {
-          dispatch(setUser(null));
-          storeData('@User', null);
-          console.log('User signed out!');
-        });
-    }
-  }
-
   return (
     <>
       <SafeAreaView style={{flex: 1, backgroundColor: '#739FB7'}}>
