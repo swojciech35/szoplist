@@ -6,6 +6,10 @@ import {TouchableOpacity} from 'react-native';
 import CustomCheckbox from './CustomCheckbox';
 import allProducts from './allProducts';
 import {SelectProductsScreenProps} from 'navTypes';
+import Btn from './element/Btn';
+import CustomTextInput from './element/CustomTextInput';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 function SelectProductsScreen({
   route,
@@ -31,22 +35,40 @@ function SelectProductsScreen({
   const listOfCategories = list.map((cat, catIndex) => (
     <View key={'C' + catIndex}>
       <TouchableOpacity
-        style={{backgroundColor: 'lightblue'}}
+        style={{
+          backgroundColor: '#5a8196',
+          flexDirection: 'row',
+          borderWidth: 2,
+          borderRadius: 8,
+          margin: 5,
+        }}
         onPress={() => toggleCategory(catIndex)}>
-        <Text style={{fontSize: 20, fontWeight: 'bold'}}>{cat.category}</Text>
+        <Icon
+          name={openTabs[catIndex] ? 'expand-less' : 'expand-more'}
+          size={30}
+          color="black"
+        />
+        <Text style={{fontSize: 20, fontWeight: 'bold', color: 'black'}}>
+          {cat.category}
+        </Text>
       </TouchableOpacity>
       {openTabs[catIndex]
         ? cat.products.map((prod, prodIndex) => (
             <View style={{flexDirection: 'row'}} key={'P' + prodIndex}>
               <TouchableOpacity
-                style={{flexDirection: 'row', width: '100%'}}
+                style={{
+                  flexDirection: 'row',
+                  width: '100%',
+                  paddingHorizontal: 6,
+                  paddingVertical: 3,
+                }}
                 onPress={() => {
                   markProduct(catIndex, prodIndex);
                 }}>
                 <CustomCheckbox
                   isChecked={markedProducts[catIndex][prodIndex]}
                 />
-                <Text> {prod.name}</Text>
+                <Text style={{color: 'black', fontSize: 20}}> {prod.name}</Text>
               </TouchableOpacity>
             </View>
           ))
@@ -66,8 +88,10 @@ function SelectProductsScreen({
       <Text
         style={{
           fontWeight: index === newProductCategoryIndex ? 'bold' : 'normal',
+          fontSize: 20,
+          color: 'black',
         }}>
-        {cat}
+        {index === newProductCategoryIndex ? '> ' + cat + ' <' : cat}
       </Text>
     </TouchableOpacity>
   ));
@@ -75,25 +99,36 @@ function SelectProductsScreen({
     <Modal visible={newProductWindow} animationType="slide" transparent={true}>
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
-          <Text>wprowadź dane produktu</Text>
-          <View
-            style={{minWidth: '75%', display: 'flex', flexDirection: 'row'}}>
-            <Text>Nazwa:</Text>
-            <TextInput
-              value={newProductName}
-              onChangeText={setName}
-              style={{borderWidth: 2, borderColor: 'black'}}
-            />
-          </View>
-          <Text>Kategoria:</Text>
+          <Text style={{color: 'black', fontSize: 30, marginBottom: 20}}>
+            NOWY PRODUKT
+          </Text>
+
+          <Text style={{color: 'black', fontSize: 20}}>Nazwa:</Text>
+          <CustomTextInput value={newProductName} onChangeText={setName} />
+
+          <Text style={{color: 'black', fontSize: 20, marginBottom: 20}}>
+            Kategoria:
+          </Text>
           {menuOfCategories}
-          <TouchableOpacity
-            onPress={() => {
+
+          <Btn
+            name="Dodaj produkt"
+            minWidth="60%"
+            function={() => {
               setWindow(!newProductWindow);
               addProduct(newProductName, newProductCategoryIndex);
-            }}>
-            <Text>dodaj produkt</Text>
-          </TouchableOpacity>
+            }}
+          />
+
+          <Btn
+            function={() => {
+              setCategoryIndex(0);
+              setName('');
+              setWindow(!newProductWindow);
+            }}
+            name="Anuluj"
+            minWidth="60%"
+          />
         </View>
       </View>
     </Modal>
@@ -196,22 +231,25 @@ function SelectProductsScreen({
   };
 
   return (
-    <View>
+    <SafeAreaView style={{flex: 1, backgroundColor: '#739FB7'}}>
       {modal}
-      <TouchableOpacity onPress={() => changeTabs(false)}>
-        <Text>schowaj wszystkie</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => changeTabs(true)}>
-        <Text>rozwiń wszystkie</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => createList()}>
-        <Text>utwórz liste</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => setWindow(!newProductWindow)}>
-        <Text>dodaj produkt</Text>
-      </TouchableOpacity>
+      <Text
+        style={{
+          color: 'black',
+          fontSize: 30,
+          margin: 10,
+          textAlign: 'center',
+        }}>
+        WYBIERZ PRODUKTY
+      </Text>
+      <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+        <Btn name="Schowaj wszystkie" function={() => changeTabs(false)} />
+        <Btn name="Rozwiń wszystkie" function={() => changeTabs(true)} />
+      </View>
       <ScrollView>{listOfCategories}</ScrollView>
-    </View>
+      <Btn name="Dodaj produkt" function={() => setWindow(!newProductWindow)} />
+      <Btn name="Utwórz listę" function={() => createList()} />
+    </SafeAreaView>
   );
 }
 
@@ -225,8 +263,9 @@ const styles = StyleSheet.create({
   },
   modalView: {
     margin: 20,
-    backgroundColor: 'white',
+    backgroundColor: '#5a8196',
     borderRadius: 20,
+    borderWidth: 2,
     padding: 15,
     alignItems: 'center',
     shadowColor: '#000',

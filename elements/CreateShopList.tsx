@@ -1,10 +1,4 @@
 import {View, Text} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
-
-import type {RouteProp} from '@react-navigation/native';
-import type {DrawerScreenProps} from '@react-navigation/drawer';
-
-import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {CreateShopListProps} from 'navTypes';
 import {useState} from 'react';
 import {TextInput} from 'react-native';

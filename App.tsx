@@ -16,7 +16,6 @@ import {checkInternetConnection} from 'function/internet';
 
 const Drawer = createDrawerNavigator<RootStackParamList>();
 
-
 function App(): JSX.Element {
   const dispatch = useAppDispatch();
   React.useEffect(() => {
@@ -38,15 +37,22 @@ function App(): JSX.Element {
           initialParams={{list: []}}
         />
         <Drawer.Screen
-          options={{unmountOnBlur: true}}
+          options={{unmountOnBlur: true, headerShown: false}}
           name="Select products screen"
           component={SelectProductsScreen}
           initialParams={{list: []}}
-
         />
         <Drawer.Screen name="Show List" component={ShopList} />
-        <Drawer.Screen name="Login" component={LoginScreen} options={{headerShown:false}} />
-        <Drawer.Screen name="Register" component={RegisterScreen} options={{headerShown:false}} />
+        <Drawer.Screen
+          name="Login"
+          component={LoginScreen}
+          options={{headerShown: false}}
+        />
+        <Drawer.Screen
+          name="Register"
+          component={RegisterScreen}
+          options={{headerShown: false}}
+        />
       </Drawer.Navigator>
     </NavigationContainer>
   );
