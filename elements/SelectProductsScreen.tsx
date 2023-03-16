@@ -10,6 +10,7 @@ import Btn from './element/Btn';
 import CustomTextInput from './element/CustomTextInput';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import DrawerShowButton from './element/DrawerShowButton';
 
 function SelectProductsScreen({
   route,
@@ -232,6 +233,7 @@ function SelectProductsScreen({
 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: '#739FB7'}}>
+      <DrawerShowButton navigation={navigation} />
       {modal}
       <Text
         style={{
