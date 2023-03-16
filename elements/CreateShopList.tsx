@@ -1,8 +1,11 @@
-import {View, Text} from 'react-native';
+import {View, Text, SafeAreaView, ScrollView} from 'react-native';
 import {CreateShopListProps} from 'navTypes';
 import {useState} from 'react';
 import {TextInput} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import CustomTextInput from './element/CustomTextInput';
+import Icon from 'react-native-vector-icons/Entypo';
+import Btn from './element/Btn';
 
 function CreateShopList({route, navigation}: CreateShopListProps): JSX.Element {
   const list = route.params.list;
@@ -14,35 +17,76 @@ function CreateShopList({route, navigation}: CreateShopListProps): JSX.Element {
 
   let mappedList = list.map(category =>
     category.products.map(product => (
-      <Text key={product.name}>
-        {product.name} ({category.category})
-      </Text>
+      <View
+        key={product.name}
+        style={{flexDirection: 'row', alignItems: 'center'}}>
+        <Icon name="dot-single" size={20} color="black" />
+        <Text style={{fontSize: 20, color: 'black'}}>{product.name}</Text>
+        <Text style={{fontSize: 20, color: '#333333', fontStyle: 'italic'}}>
+          {' '}
+          ({category.category})
+        </Text>
+      </View>
     )),
   );
 
+  const numberOfProducts = () => {
+    let result = 0;
+    list.forEach(category => (result += category.products.length));
+    return result;
+  };
+
   return (
-    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-      <Text style={{color: 'black'}}>Create Shop List Screen</Text>
-      <TextInput
-        value={listName}
-        onChangeText={setName}
-        style={{borderWidth: 2, borderColor: 'black'}}
-      />
-      {mappedList}
-      <TouchableOpacity
-        onPress={() => {
-          navigation.navigate('Select products screen', {list: list});
+    <SafeAreaView style={{flex: 1, backgroundColor: '#739FB7'}}>
+      <Text
+        style={{
+          color: 'black',
+          fontSize: 30,
+          margin: 10,
+          textAlign: 'center',
         }}>
-        <Text>WYBIERZ/EDYTUJ PRODUKTY</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() => {
+        NOWA LISTA
+      </Text>
+      <Text
+        style={{
+          color: 'black',
+          textAlign: 'center',
+          fontSize: 20,
+        }}>
+        Nazwa:
+      </Text>
+      <CustomTextInput value={listName} onChangeText={setName} />
+      <Text
+        style={{
+          color: 'black',
+          textAlign: 'center',
+          fontSize: 20,
+        }}>
+        Produkty ({numberOfProducts()}):
+      </Text>
+      <ScrollView style={{padding: 20}}>
+        {list.length > 0 ? (
+          mappedList
+        ) : (
+          <Text style={{fontSize: 20, color: '#333333'}}>
+            Brak wybranych produktów
+          </Text>
+        )}
+      </ScrollView>
+      <Btn
+        function={() => {
+          navigation.navigate('Select products screen', {list: list});
+        }}
+        name="Wybierz/edytuj produkty"
+      />
+      <Btn
+        name="Utwórz listę"
+        function={() => {
           console.log(createList());
           navigation.navigate('Home');
-        }}>
-        <Text>UTWÓRZ LISTĘ</Text>
-      </TouchableOpacity>
-    </View>
+        }}
+      />
+    </SafeAreaView>
   );
 }
 export default CreateShopList;

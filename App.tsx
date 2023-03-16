@@ -31,7 +31,7 @@ function App(): JSX.Element {
         <Drawer.Screen name="Home" component={HomeScreen} />
 
         <Drawer.Screen
-          options={{unmountOnBlur: true}}
+          options={{unmountOnBlur: true, headerShown: false}}
           name="Create New List"
           component={CreateShopList}
           initialParams={{list: []}}
