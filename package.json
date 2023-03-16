@@ -24,6 +24,7 @@
     "react-native": "0.71.3",
     "react-native-dropdown-select-list": "^2.0.4",
     "react-native-element-textinput": "^2.2.0",
+    "react-native-elements": "^3.4.3",
     "react-native-gesture-handler": "^2.9.0",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
     "react-native-reanimated": "^2.14.4",

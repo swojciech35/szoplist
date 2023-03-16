@@ -8,6 +8,7 @@ import GoogleLoginBtn from './element/googleLoginBtn';
 import {addNewUserToDatabase} from 'function/database';
 import CustomTextInput from './element/CustomTextInput';
 import Btn from './element/Btn';
+import DrawerShowButton from './element/DrawerShowButton';
 function RegisterScreen({navigation}: any): JSX.Element {
   const dispatch = useAppDispatch();
   const [email, setEmail] = React.useState('');
@@ -64,6 +65,7 @@ function RegisterScreen({navigation}: any): JSX.Element {
   return (
     <>
       <SafeAreaView style={{flex: 1, backgroundColor: '#739FB7'}}>
+      <DrawerShowButton navigation={navigation}/>
         <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
           <Text style={{color: 'black', fontSize: 40}}>ZAREJESTRUJ SIĘ</Text>
 

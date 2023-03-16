@@ -7,6 +7,7 @@ import {storeData} from '../function/async-storage';
 import GoogleLoginBtn from './element/googleLoginBtn';
 import Btn from './element/Btn';
 import CustomTextInput from './element/CustomTextInput';
+import DrawerShowButton from './element/DrawerShowButton';
 function LoginScreen({navigation}: any): JSX.Element {
   const usr = useAppSelector(state => state.user.userData);
   const dispatch = useAppDispatch();
@@ -55,21 +56,10 @@ function LoginScreen({navigation}: any): JSX.Element {
     }
   }
 
-  function signOut() {
-    if (usr != null) {
-      auth()
-        .signOut()
-        .then(() => {
-          dispatch(setUser(null));
-          storeData('@User', null);
-          console.log('User signed out!');
-        });
-    }
-  }
-
   return (
     <>
       <SafeAreaView style={{flex: 1, backgroundColor: '#739FB7'}}>
+        <View><DrawerShowButton navigation={navigation}/></View>
         <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
           <Text style={{color: 'black', fontSize: 50}}>ZALOGUJ SIĘ</Text>
           <CustomTextInput
