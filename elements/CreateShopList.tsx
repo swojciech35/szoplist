@@ -6,13 +6,14 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import CustomTextInput from './element/CustomTextInput';
 import Icon from 'react-native-vector-icons/Entypo';
 import Btn from './element/Btn';
+import uuid from 'react-native-uuid';
 
 function CreateShopList({route, navigation}: CreateShopListProps): JSX.Element {
   const list = route.params.list;
   const [listName, setName] = useState('');
 
   const createList = () => {
-    return {name: listName, listOfProducts: list};
+    return {name: listName, listOfProducts: list, id: uuid.v4().toString()};
   };
 
   let mappedList = list.map(category =>

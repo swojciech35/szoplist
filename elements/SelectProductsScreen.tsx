@@ -39,6 +39,14 @@ function SelectProductsScreen({
   const [newProductCategoryIndex, setCategoryIndex] = useState(0);
   const [newProductName, setName] = useState('');
 
+  const numberOfMarked = () => {
+    let number = 0;
+    markedProducts.forEach(array =>
+      array.forEach(item => (item ? (number += 1) : null)),
+    );
+    return number;
+  };
+
   const listOfCategories = list.map((cat, catIndex) => (
     <View key={'C' + catIndex}>
       <TouchableOpacity
@@ -261,7 +269,19 @@ function SelectProductsScreen({
       </View>
       <ScrollView>{listOfCategories}</ScrollView>
       <Btn name="Dodaj produkt" function={() => setWindow(!newProductWindow)} />
-      <Btn name="Utwórz listę" function={() => createList()} />
+      <Btn
+        name="Utwórz listę"
+        function={() => {
+          if (numberOfMarked() > 0) {
+            createList();
+          } else {
+            ToastAndroid.show(
+              'Wybierz minimum jeden produkt',
+              ToastAndroid.SHORT,
+            );
+          }
+        }}
+      />
     </SafeAreaView>
   );
 }
