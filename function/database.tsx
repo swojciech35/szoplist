@@ -37,17 +37,58 @@ export const getUserSharedLists = (userId: string) =>
       return snapshot.val();
     });
 
-export const addNewList = (userId: string, listId: string, list: object) => {
-  databaseConnect.ref(`/user/${userId}/list/${listId}`).set(list);
+export const addNewList = (listId: string, list: object) => {
+  databaseConnect.ref(`/list/${listId}`).set(list);
 };
 
-export const shareList = (userId: string, listId: string, list: object) => {
-  databaseConnect.ref(`/user/${userId}/sharedList/${listId}`).set(list);
+export const getlists = () =>
+  databaseConnect
+    .ref(`/list`)
+    .once('value')
+    .then(snapshot => {
+      return snapshot.val();
+    });
+
+export const getlist = (id: string) =>
+  databaseConnect
+    .ref(`/list/${id}`)
+    .once('value')
+    .then(snapshot => {
+      return snapshot.val();
+    });
+
+export const deleteList = (id: string) => {
+  databaseConnect.ref(`/list/${id}`).remove();
 };
 
-export const deleteList = (userId: string, listId: string) => {
-  databaseConnect.ref(`/user/${userId}/list/${listId}`).remove();
+export const addListIdToUser = (userId: string, listId: string) => {
+  databaseConnect.ref(`/user/${userId}/list/${listId}`).set({id: listId});
 };
+
+export const getUserIdList = (id: string) =>
+  databaseConnect
+    .ref(`/user/${id}/list`)
+    .once('value')
+    .then(snapshot => {
+      return snapshot.val();
+    });
+
+export const addListIdToShareUser = (userId: string, listId: string) => {
+  databaseConnect.ref(`/user/${userId}/sharedlist/${listId}`).set({id: listId});
+};
+
+export const getUsersharedIdList = (id: string) =>
+  databaseConnect
+    .ref(`/user/${id}/sharedlist`)
+    .once('value')
+    .then(snapshot => {
+      return snapshot.val();
+    });
+
 export const deleteSharedList = (userId: string, listId: string) => {
-  databaseConnect.ref(`/user/${userId}/sharedList/${listId}`).remove();
+  databaseConnect.ref(`/user/${userId}/sharedlist/${listId}`).remove();
+};
+
+export const deleteListIdUser = (userId: string, listId: string) => {
+  databaseConnect.ref(`/user/${userId}/list/${listId}`).remove();
 };
