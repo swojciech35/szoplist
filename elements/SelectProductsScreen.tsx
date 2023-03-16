@@ -1,5 +1,12 @@
 import {ReactElement, ReactNode, useEffect} from 'react';
-import {View, Text, ScrollView, Modal, StyleSheet} from 'react-native';
+import {
+  View,
+  Text,
+  ScrollView,
+  Modal,
+  StyleSheet,
+  ToastAndroid,
+} from 'react-native';
 import {useState} from 'react';
 import {TextInput} from 'react-native-gesture-handler';
 import {TouchableOpacity} from 'react-native';
@@ -32,6 +39,14 @@ function SelectProductsScreen({
   const [newProductWindow, setWindow] = useState(false);
   const [newProductCategoryIndex, setCategoryIndex] = useState(0);
   const [newProductName, setName] = useState('');
+
+  const numberOfMarked = () => {
+    let number = 0;
+    markedProducts.forEach(array =>
+      array.forEach(item => (item ? (number += 1) : null)),
+    );
+    return number;
+  };
 
   const listOfCategories = list.map((cat, catIndex) => (
     <View key={'C' + catIndex}>
@@ -116,8 +131,14 @@ function SelectProductsScreen({
             name="Dodaj produkt"
             minWidth="60%"
             function={() => {
-              setWindow(!newProductWindow);
-              addProduct(newProductName, newProductCategoryIndex);
+              if (newProductName != '') {
+                setWindow(!newProductWindow);
+                addProduct(newProductName, newProductCategoryIndex);
+              } else
+                ToastAndroid.show(
+                  'Wprowadź nazwę produktu',
+                  ToastAndroid.SHORT,
+                );
             }}
           />
 
@@ -250,7 +271,19 @@ function SelectProductsScreen({
       </View>
       <ScrollView>{listOfCategories}</ScrollView>
       <Btn name="Dodaj produkt" function={() => setWindow(!newProductWindow)} />
-      <Btn name="Utwórz listę" function={() => createList()} />
+      <Btn
+        name="Utwórz listę"
+        function={() => {
+          if (numberOfMarked() > 0) {
+            createList();
+          } else {
+            ToastAndroid.show(
+              'Wybierz minimum jeden produkt',
+              ToastAndroid.SHORT,
+            );
+          }
+        }}
+      />
     </SafeAreaView>
   );
 }

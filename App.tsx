@@ -24,6 +24,7 @@ function App(): JSX.Element {
   return (
     <NavigationContainer>
 
+
       <Drawer.Navigator
       screenOptions={{drawerStyle:{width:260,paddingLeft:10,backgroundColor:'transparent'}}}
       initialRouteName="Home" drawerContent={(props)=><CustomDrawer {...props}/>
@@ -34,6 +35,7 @@ function App(): JSX.Element {
         options={{item:screen,unmountOnBlur:screen.unmountOnBlur,headerShown:screen.headerShown}}/>
       ))}
              </Drawer.Navigator>
+
 
     </NavigationContainer>
   );
