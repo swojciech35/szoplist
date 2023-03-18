@@ -4,6 +4,8 @@ export const listSlice = createSlice({
   initialState: {
     listId: null,
     sharedListId: null,
+    listData: null,
+    sharedListData: null,
   },
   reducers: {
     setListId: (state, action) => {
@@ -12,8 +14,14 @@ export const listSlice = createSlice({
     setSharedListId: (state, action) => {
       state.sharedListId = action.payload;
     },
+    setListData: (state, action) => {
+      state.listData = action.payload;
+    },
+    setSharedListData: (state, action) => {
+      state.sharedListData = action.payload;
+    },
   },
 });
 
-export const {setListId, setSharedListId} = listSlice.actions;
+export const {setListId, setSharedListId, setListData, setSharedListData} = listSlice.actions;
 export default listSlice.reducer;
