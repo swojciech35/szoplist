@@ -15,7 +15,7 @@ function CreateShopList({route, navigation}: CreateShopListProps): JSX.Element {
   const list = route.params.list;
   const [listName, setName] = useState(route.params.name);
   const id = route.params.id == null ? uuid.v4().toString() : route.params.id;
-
+  const usr = useAppSelector(state => state.user.userData);
   const ifListSaved = route.params.id == null ? false : true;
   const createList = () => {
     return {name: listName, listOfProducts: list, id: id};
@@ -98,7 +98,7 @@ function CreateShopList({route, navigation}: CreateShopListProps): JSX.Element {
             ToastAndroid.show('Nazwa nie może być pusta', ToastAndroid.SHORT);
           } else {
             addNewList(id, createList());
-            // addListIdToUser('N5ER2atKBdb9jV74GqXTno4ShM32', id);
+            if (usr != null) addListIdToUser(usr.uid, id);
             navigation.navigate('Show List', {listId: id});
           }
         }}
