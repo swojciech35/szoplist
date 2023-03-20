@@ -1,4 +1,4 @@
-import {View, Text, SafeAreaView, ScrollView} from 'react-native';
+import {View, Text, SafeAreaView, ScrollView, ToastAndroid} from 'react-native';
 import {CreateShopListProps} from 'navTypes';
 import {useState} from 'react';
 import {TextInput} from 'react-native';
@@ -10,7 +10,7 @@ import uuid from 'react-native-uuid';
 
 function CreateShopList({route, navigation}: CreateShopListProps): JSX.Element {
   const list = route.params.list;
-  const [listName, setName] = useState('');
+  const [listName, setName] = useState(route.params.name);
 
   const createList = () => {
     return {name: listName, listOfProducts: list, id: uuid.v4().toString()};
@@ -74,17 +74,25 @@ function CreateShopList({route, navigation}: CreateShopListProps): JSX.Element {
           </Text>
         )}
       </ScrollView>
+
       <Btn
         function={() => {
-          navigation.navigate('Select products screen', {list: list});
+          navigation.navigate('Select products screen', {
+            name: listName,
+            list: list,
+          });
         }}
         name="Wybierz/edytuj produkty"
       />
       <Btn
         name="Utwórz listę"
         function={() => {
-          console.log(createList());
-          navigation.navigate('Home');
+          if (listName == '') {
+            ToastAndroid.show('Nazwa nie może być pusta', ToastAndroid.SHORT);
+          } else {
+            console.log(createList());
+            navigation.navigate('Home');
+          }
         }}
       />
     </SafeAreaView>
