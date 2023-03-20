@@ -177,7 +177,14 @@ function FriendsScreen({navigation}: any): JSX.Element {
         </View>
         <Btn
           name={'Dodaj znajomego Szopa'}
-          function={() => setModalAddNewFriendVisibility(true)}
+          function={() =>
+            usr != null
+              ? setModalAddNewFriendVisibility(true)
+              : ToastAndroid.show(
+                  'Zaloguj się aby dodać znajomych',
+                  ToastAndroid.SHORT,
+                )
+          }
           minWidth={'65%'}
         />
         <Btn
