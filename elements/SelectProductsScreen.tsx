@@ -252,6 +252,7 @@ function SelectProductsScreen({
     navigation.navigate('Create New List', {
       name: route.params.name,
       list: tmp,
+      id: route.params.id,
     });
   };
 

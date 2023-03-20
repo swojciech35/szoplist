@@ -7,13 +7,18 @@ import CustomTextInput from './element/CustomTextInput';
 import Icon from 'react-native-vector-icons/Entypo';
 import Btn from './element/Btn';
 import uuid from 'react-native-uuid';
+import DrawerShowButton from './element/DrawerShowButton';
 
 function CreateShopList({route, navigation}: CreateShopListProps): JSX.Element {
   const list = route.params.list;
   const [listName, setName] = useState(route.params.name);
+  const [id, setId] = useState(
+    route.params.id == null ? uuid.v4().toString() : route.params.id,
+  );
+  const ifListSaved = route.params.id == null ? false : true;
 
   const createList = () => {
-    return {name: listName, listOfProducts: list, id: uuid.v4().toString()};
+    return {name: listName, listOfProducts: list, id: id};
   };
 
   let mappedList = list.map(category =>
@@ -39,6 +44,7 @@ function CreateShopList({route, navigation}: CreateShopListProps): JSX.Element {
 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: '#739FB7'}}>
+      <DrawerShowButton navigation={navigation} />
       <Text
         style={{
           color: 'black',
@@ -46,7 +52,7 @@ function CreateShopList({route, navigation}: CreateShopListProps): JSX.Element {
           margin: 10,
           textAlign: 'center',
         }}>
-        NOWA LISTA
+        {ifListSaved ? 'EDYTUJ LISTĘ' : 'NOWA LISTA'}
       </Text>
       <Text
         style={{
@@ -80,18 +86,19 @@ function CreateShopList({route, navigation}: CreateShopListProps): JSX.Element {
           navigation.navigate('Select products screen', {
             name: listName,
             list: list,
+            id: id,
           });
         }}
         name="Wybierz/edytuj produkty"
       />
       <Btn
-        name="Utwórz listę"
+        name="Zapisz listę"
         function={() => {
           if (listName == '') {
             ToastAndroid.show('Nazwa nie może być pusta', ToastAndroid.SHORT);
           } else {
             console.log(createList());
-            navigation.navigate('Home');
+            navigation.navigate('Show List', {listId: id});
           }
         }}
       />

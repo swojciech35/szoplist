@@ -137,7 +137,16 @@ function ShopList({route, navigation}: ShopListProps): JSX.Element {
         style={{margin: 15, borderWidth: 2, height: 15, borderRadius: 10}}
       />
       <ScrollView style={{marginHorizontal: 10}}>{mappedList}</ScrollView>
-      <Btn name="Edytuj listę" function={() => {}} />
+      <Btn
+        name="Edytuj listę"
+        function={() => {
+          navigation.navigate('Create New List', {
+            id: list.id,
+            list: list.listOfProducts,
+            name: list.name,
+          });
+        }}
+      />
       <Btn
         name="Zapisz listę"
         function={() => {
