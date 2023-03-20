@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   Modal,
   StyleSheet,
+  Share,
 } from 'react-native';
 import React from 'react';
 import {useAppSelector, useAppDispatch} from '../hooks';
@@ -16,12 +17,14 @@ import CustomTextInput from './element/CustomTextInput';
 
 function FriendsScreen({navigation}: any): JSX.Element {
   const friends = useAppSelector(state => state.user.friends);
+  const usr = useAppSelector(state => state.user.userData);
   const [person, setPerson] = React.useState({name: null, id: null});
   const [modalVisibility, setModalVisibility] = React.useState(false);
   const [modalAddNewFriendVisibility, setModalAddNewFriendVisibility] =
     React.useState(false);
   const [name, setname] = React.useState('');
   const [friendId, setFriendId] = React.useState('');
+
   const modal = (
     <Modal visible={modalVisibility} animationType="slide" transparent={true}>
       <View style={styles.centeredView}>
@@ -113,6 +116,18 @@ function FriendsScreen({navigation}: any): JSX.Element {
       </View>
     </Modal>
   );
+
+  const onShare = async () => {
+    try {
+      await Share.share({
+        message: `Cześć Szopie! Dodaj mnie do znajomych wpisując poniższe ID:\n ${usr.uid}`,
+        title: 'SzopLIst',
+      });
+    } catch (error: any) {
+      console.log(error.message);
+    }
+  };
+
   return (
     <>
       <SafeAreaView style={{flex: 1, backgroundColor: '#739FB7'}}>
@@ -162,7 +177,7 @@ function FriendsScreen({navigation}: any): JSX.Element {
         />
         <Btn
           name={'Udostępnij swoje ID'}
-          function={() => console.log('kiedyś bedzie działało')}
+          function={() => onShare()}
           minWidth={'65%'}
         />
       </SafeAreaView>
