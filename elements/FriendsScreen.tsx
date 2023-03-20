@@ -6,6 +6,7 @@ import {
   Modal,
   StyleSheet,
   Share,
+  ToastAndroid,
 } from 'react-native';
 import React from 'react';
 import {useAppSelector, useAppDispatch} from '../hooks';
@@ -118,13 +119,17 @@ function FriendsScreen({navigation}: any): JSX.Element {
   );
 
   const onShare = async () => {
-    try {
-      await Share.share({
-        message: `Cześć Szopie! Dodaj mnie do znajomych wpisując poniższe ID:\n ${usr.uid}`,
-        title: 'SzopLIst',
-      });
-    } catch (error: any) {
-      console.log(error.message);
+    if (usr != null) {
+      try {
+        await Share.share({
+          message: `Cześć Szopie! Dodaj mnie do znajomych wpisując poniższe ID:\n ${usr.uid}`,
+          title: 'SzopLIst',
+        });
+      } catch (error: any) {
+        console.log(error.message);
+      }
+    } else {
+      ToastAndroid.show('Zaloguj się aby pobrać ID', ToastAndroid.SHORT);
     }
   };
 
