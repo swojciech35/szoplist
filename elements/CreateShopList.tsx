@@ -8,6 +8,8 @@ import Icon from 'react-native-vector-icons/Entypo';
 import Btn from './element/Btn';
 import uuid from 'react-native-uuid';
 import DrawerShowButton from './element/DrawerShowButton';
+import {addListIdToUser, addNewList} from 'function/database';
+import {useAppSelector} from 'hooks';
 
 function CreateShopList({route, navigation}: CreateShopListProps): JSX.Element {
   const list = route.params.list;
@@ -15,7 +17,6 @@ function CreateShopList({route, navigation}: CreateShopListProps): JSX.Element {
   const id = route.params.id == null ? uuid.v4().toString() : route.params.id;
 
   const ifListSaved = route.params.id == null ? false : true;
-
   const createList = () => {
     return {name: listName, listOfProducts: list, id: id};
   };
@@ -96,7 +97,8 @@ function CreateShopList({route, navigation}: CreateShopListProps): JSX.Element {
           if (listName == '') {
             ToastAndroid.show('Nazwa nie może być pusta', ToastAndroid.SHORT);
           } else {
-            console.log(createList());
+            addNewList(id, createList());
+            // addListIdToUser('N5ER2atKBdb9jV74GqXTno4ShM32', id);
             navigation.navigate('Show List', {listId: id});
           }
         }}
