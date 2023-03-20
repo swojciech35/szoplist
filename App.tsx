@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {NavigationContainer} from '@react-navigation/native';
-import {setUser} from './redux/userSlice';
+import {setFriends, setUser} from './redux/userSlice';
 import {useAppSelector, useAppDispatch} from './hooks';
 import {getData} from './function/async-storage';
 import SplashScreen from 'react-native-splash-screen';
@@ -15,6 +15,7 @@ const Drawer = createDrawerNavigator<RootStackParamList>();
 function App(): JSX.Element {
   const dispatch = useAppDispatch();
   React.useEffect(() => {
+    dispatch(setFriends([{name:"szop1",id:1},{name:"szop2",id:2},{name:"szop3",id:3},{name:"szop4",id:4},{name:"szop5",id:5},{name:"szop6",id:6}]));
     dispatch(checkInternetConnection());
     SplashScreen.hide();
     getData('@User').then(value => {
