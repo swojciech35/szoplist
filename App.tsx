@@ -15,11 +15,14 @@ const Drawer = createDrawerNavigator<RootStackParamList>();
 function App(): JSX.Element {
   const dispatch = useAppDispatch();
   React.useEffect(() => {
-    dispatch(setFriends([{name:"szop1",id:1},{name:"szop2",id:2},{name:"szop3",id:3},{name:"szop4",id:4},{name:"szop5",id:5},{name:"szop6",id:6}]));
     dispatch(checkInternetConnection());
     SplashScreen.hide();
     getData('@User').then(value => {
       dispatch(setUser(value));
+    });
+    getData('@Friends').then(value => {
+      value?
+      dispatch(setFriends(value)):null
     });
   }, []);
   return (

@@ -12,8 +12,11 @@ export const userSlice = createSlice({
     setFriends: (state, action) => {
       state.friends = action.payload;
     },
+    addFriend: (state: any, action) => {
+      state.friends.push(action.payload);
+    },
   },
 });
 
-export const {setUser, setFriends} = userSlice.actions;
+export const {setUser, setFriends, addFriend} = userSlice.actions;
 export default userSlice.reducer;

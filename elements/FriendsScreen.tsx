@@ -15,9 +15,12 @@ import {Icon} from 'react-native-elements';
 import {ScrollView} from 'react-native-gesture-handler';
 import Btn from './element/Btn';
 import CustomTextInput from './element/CustomTextInput';
+import {addFriend} from 'redux/userSlice';
+import {storeData} from 'function/async-storage';
 
 function FriendsScreen({navigation}: any): JSX.Element {
-  const friends = useAppSelector(state => state.user.friends);
+  const dispatch = useAppDispatch();
+  const friends: any = useAppSelector(state => state.user.friends);
   const usr = useAppSelector(state => state.user.userData);
   const [person, setPerson] = React.useState({name: null, id: null});
   const [modalVisibility, setModalVisibility] = React.useState(false);
@@ -25,6 +28,11 @@ function FriendsScreen({navigation}: any): JSX.Element {
     React.useState(false);
   const [name, setname] = React.useState('');
   const [friendId, setFriendId] = React.useState('');
+
+  const handleAddFriend = () => {
+    const newFriend = {name: 'szop1', id: 1};
+    dispatch(addFriend(newFriend));
+  };
 
   const modal = (
     <Modal visible={modalVisibility} animationType="slide" transparent={true}>
@@ -110,7 +118,12 @@ function FriendsScreen({navigation}: any): JSX.Element {
           />
           <Btn
             name={'Dodaj znajomego Szopa'}
-            function={() => setModalAddNewFriendVisibility(true)}
+            function={() => {
+              dispatch(addFriend({name: name, id: friendId}));
+              setname('');
+              setFriendId('');
+              setModalAddNewFriendVisibility(false);
+            }}
             minWidth={'65%'}
           />
         </View>
@@ -133,6 +146,10 @@ function FriendsScreen({navigation}: any): JSX.Element {
     }
   };
 
+  React.useEffect(() => {
+    storeData('@Friends', friends);
+  }, [friends]);
+
   return (
     <>
       <SafeAreaView style={{flex: 1, backgroundColor: '#739FB7'}}>
@@ -141,7 +158,7 @@ function FriendsScreen({navigation}: any): JSX.Element {
           {modal}
           {modalAddNewFriend}
           <Text style={{color: 'black', fontSize: 40}}>Przyjazne Szopy</Text>
-          {friends.length > 0 ? (
+          {friends != null && friends.length > 0 ? (
             <View style={{width: '100%'}}>
               <ScrollView style={{height: '80%'}}>
                 {friends.map((_: any, i: any) => (
