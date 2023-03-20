@@ -12,9 +12,8 @@ import DrawerShowButton from './element/DrawerShowButton';
 function CreateShopList({route, navigation}: CreateShopListProps): JSX.Element {
   const list = route.params.list;
   const [listName, setName] = useState(route.params.name);
-  const [id, setId] = useState(
-    route.params.id == null ? uuid.v4().toString() : route.params.id,
-  );
+  const id = route.params.id == null ? uuid.v4().toString() : route.params.id;
+
   const ifListSaved = route.params.id == null ? false : true;
 
   const createList = () => {
@@ -86,7 +85,7 @@ function CreateShopList({route, navigation}: CreateShopListProps): JSX.Element {
           navigation.navigate('Select products screen', {
             name: listName,
             list: list,
-            id: id,
+            id: route.params.id,
           });
         }}
         name="Wybierz/edytuj produkty"
