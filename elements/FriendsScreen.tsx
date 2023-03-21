@@ -15,7 +15,7 @@ import {Icon} from 'react-native-elements';
 import {ScrollView} from 'react-native-gesture-handler';
 import Btn from './element/Btn';
 import CustomTextInput from './element/CustomTextInput';
-import {addFriend} from 'redux/userSlice';
+import {addFriend, removeFriend} from 'redux/userSlice';
 import {storeData} from 'function/async-storage';
 
 function FriendsScreen({navigation}: any): JSX.Element {
@@ -28,11 +28,6 @@ function FriendsScreen({navigation}: any): JSX.Element {
     React.useState(false);
   const [name, setname] = React.useState('');
   const [friendId, setFriendId] = React.useState('');
-
-  const handleAddFriend = () => {
-    const newFriend = {name: 'szop1', id: 1};
-    dispatch(addFriend(newFriend));
-  };
 
   const modal = (
     <Modal visible={modalVisibility} animationType="slide" transparent={true}>
@@ -60,6 +55,7 @@ function FriendsScreen({navigation}: any): JSX.Element {
             </Text>
             <TouchableOpacity
               onPress={() => {
+                dispatch(removeFriend(person));
                 setModalVisibility(false);
               }}>
               <Icon
