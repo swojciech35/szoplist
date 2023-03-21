@@ -159,6 +159,7 @@ function SelectProductsScreen({
   const toggleCategory = (index: number) => {
     setTabs(check => check.map((item, idx) => (idx === index ? !item : item)));
   };
+
   const markProduct = (catIndex: number, prodIndex: number) => {
     setMarked(check =>
       check.map((itemC, indexC) =>
@@ -166,6 +167,27 @@ function SelectProductsScreen({
           ? check[indexC].map((itemP, indexP) =>
               indexP === prodIndex ? !itemP : itemP,
             )
+          : itemC,
+      ),
+    );
+  };
+
+  const checkProductToValue = (
+    catIndex: number,
+    prodIndex: number,
+    value: boolean,
+  ) => {
+    setList(prevState =>
+      prevState.map((itemC, indexC) =>
+        indexC === catIndex
+          ? {
+              category: itemC.category,
+              products: itemC['products'].map((itemP, indexP) =>
+                indexP === prodIndex
+                  ? {name: itemP.name, checked: value}
+                  : itemP,
+              ),
+            }
           : itemC,
       ),
     );
@@ -210,6 +232,13 @@ function SelectProductsScreen({
                   if (!markedProducts[index][j]) {
                     markProduct(index, j);
                   }
+
+                  checkProductToValue(
+                    index,
+                    j,
+                    previousListCategory.products[i].checked,
+                  );
+
                   break;
                 }
               }
