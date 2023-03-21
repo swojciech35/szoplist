@@ -158,12 +158,16 @@ function FriendsScreen({navigation}: any): JSX.Element {
             <View style={{width: '100%'}}>
               <ScrollView style={{height: '80%'}}>
                 {friends.map((_: any, i: any) => (
-                  <View
+                  <TouchableOpacity
                     key={i}
                     style={{
                       flexDirection: 'row',
                       alignItems: 'center',
                       justifyContent: 'center',
+                    }}
+                    onPress={() => {
+                      setPerson(_);
+                      setModalVisibility(true);
                     }}>
                     <Icon
                       name={'user'}
@@ -171,18 +175,11 @@ function FriendsScreen({navigation}: any): JSX.Element {
                       color={'#000000'}
                       size={30}
                     />
-                    <TouchableOpacity
-                      style={{display: 'flex'}}
-                      onPress={() => {
-                        setPerson(_);
-                        setModalVisibility(true);
-                      }}>
-                      <Text style={{color: 'black', fontSize: 40}}>
-                        {' '}
-                        {_.name}
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
+                    <Text style={{color: 'black', fontSize: 40}}>
+                      {' '}
+                      {_.name}
+                    </Text>
+                  </TouchableOpacity>
                 ))}
               </ScrollView>
             </View>

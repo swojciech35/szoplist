@@ -22,7 +22,7 @@ function App(): JSX.Element {
     });
     getData('@Friends').then(value => {
       value?
-      dispatch(setFriends(value)):null
+      dispatch(setFriends(value)):dispatch(setFriends([]))
     });
   }, []);
   return (
