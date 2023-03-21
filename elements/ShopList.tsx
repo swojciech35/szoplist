@@ -1,4 +1,4 @@
-import {ShopListProps} from 'navTypes';
+import {ListToSaveType, ShopListProps} from 'navTypes';
 import {
   View,
   Text,
@@ -12,31 +12,20 @@ import {ProgressBar} from 'react-native-paper';
 import {useEffect, useState} from 'react';
 import Btn from './element/Btn';
 import {ToastAndroid} from 'react-native/Libraries/Components/ToastAndroid/ToastAndroid';
+import {addNewList, getlist} from 'function/database';
 function ShopList({route, navigation}: ShopListProps): JSX.Element {
-  let list1 = {
-    id: 'e8db61ef-8747-46b1-84a9-116078b1b81d',
+  const [list, setList] = useState({
+    id: '',
     listOfProducts: [
       {
-        category: 'mięso i wędliny',
-        products: [
-          {name: 'kiełbasa', checked: false},
-          {name: 'wędlina', checked: true},
-          {name: 'parówki', checked: false},
-          {name: 'filet z kurczaka', checked: false},
-        ],
+        category: '',
+        products: [{name: '', checked: false}],
       },
     ],
-    name: 'ffff',
-  };
-
-  const [list, setList] = useState(list1);
-  const [marked, setMarked] = useState(
-    new Array(list.listOfProducts.length)
-      .fill(null)
-      .map((item, index) =>
-        Array(list.listOfProducts[index].products.length).fill(false),
-      ),
-  );
+    name: '',
+  });
+  const [marked, setMarked] = useState([[false]]);
+  const [loading, setLoading] = useState(true);
 
   const markProduct = (catIndex: number, prodIndex: number) => {
     setMarked(check =>
@@ -48,6 +37,30 @@ function ShopList({route, navigation}: ShopListProps): JSX.Element {
           : itemC,
       ),
     );
+  };
+
+  const getListFromDatabase = async () => {
+    try {
+      const json = await getlist(route.params.listId);
+
+      setMarked(
+        Array(json.listOfProducts.length)
+          .fill(null)
+          .map((item, index) =>
+            Array(json.listOfProducts[index].products.length)
+              .fill(false)
+              .map((prod, prodIndex) => {
+                return json.listOfProducts[index].products[prodIndex].checked;
+              }),
+          ),
+      );
+
+      setList(json);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const howMany = () => {
@@ -80,13 +93,7 @@ function ShopList({route, navigation}: ShopListProps): JSX.Element {
   };
 
   useEffect(() => {
-    list.listOfProducts.forEach((category, categoryIndex) =>
-      category.products.forEach((product, productIndex) => {
-        if (product.checked) {
-          markProduct(categoryIndex, productIndex);
-        }
-      }),
-    );
+    getListFromDatabase();
   }, []);
 
   let mappedList = list.listOfProducts.map((category, categoryIndex) =>
@@ -113,46 +120,52 @@ function ShopList({route, navigation}: ShopListProps): JSX.Element {
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: '#739FB7'}}>
       <DrawerShowButton navigation={navigation} />
-      <Text
-        style={{
-          color: 'black',
-          fontSize: 30,
-          margin: 10,
-          textAlign: 'center',
-        }}>
-        {list.name}
-      </Text>
-      <Text
-        style={{
-          fontSize: 20,
-          color: 'black',
-          textAlign: 'right',
-          marginHorizontal: 10,
-        }}>
-        {howMany()[0]} / {howMany()[1]}
-      </Text>
-      <ProgressBar
-        progress={howMany()[0] / howMany()[1]}
-        color="#699A41"
-        style={{margin: 15, borderWidth: 2, height: 15, borderRadius: 10}}
-      />
-      <ScrollView style={{marginHorizontal: 10}}>{mappedList}</ScrollView>
-      <Btn
-        name="Edytuj listę"
-        function={() => {
-          navigation.navigate('Create New List', {
-            id: list.id,
-            list: list.listOfProducts,
-            name: list.name,
-          });
-        }}
-      />
-      <Btn
-        name="Zapisz listę"
-        function={() => {
-          console.log(updateList());
-        }}
-      />
+
+      {loading ? null : (
+        <>
+          <Text
+            style={{
+              color: 'black',
+              fontSize: 30,
+              margin: 10,
+              textAlign: 'center',
+            }}>
+            {list.name}
+          </Text>
+          <Text
+            style={{
+              fontSize: 20,
+              color: 'black',
+              textAlign: 'right',
+              marginHorizontal: 10,
+            }}>
+            {howMany()[0]} / {howMany()[1]}
+          </Text>
+          <ProgressBar
+            progress={howMany()[0] / howMany()[1]}
+            color="#699A41"
+            style={{margin: 15, borderWidth: 2, height: 15, borderRadius: 10}}
+          />
+          <ScrollView style={{marginHorizontal: 10}}>{mappedList}</ScrollView>
+          <Btn
+            name="Edytuj listę"
+            function={() => {
+              navigation.navigate('Create New List', {
+                id: list.id,
+                list: list.listOfProducts,
+                name: list.name,
+              });
+            }}
+          />
+          <Btn
+            name="Zapisz listę"
+            function={() => {
+              addNewList(list.id, updateList());
+              navigation.navigate('Home');
+            }}
+          />
+        </>
+      )}
     </SafeAreaView>
   );
 }
