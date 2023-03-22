@@ -17,6 +17,7 @@ import Btn from './element/Btn';
 import CustomTextInput from './element/CustomTextInput';
 import {addFriend, removeFriend} from 'redux/userSlice';
 import {storeData} from 'function/async-storage';
+import {addFriendToDatabase} from 'function/database';
 
 function FriendsScreen({navigation}: any): JSX.Element {
   const dispatch = useAppDispatch();
@@ -116,6 +117,10 @@ function FriendsScreen({navigation}: any): JSX.Element {
             name={'Dodaj znajomego Szopa'}
             function={() => {
               dispatch(addFriend({name: name, id: friendId}));
+              addFriendToDatabase(usr.uid, friendId, {
+                name: name,
+                id: friendId,
+              });
               setname('');
               setFriendId('');
               setModalAddNewFriendVisibility(false);

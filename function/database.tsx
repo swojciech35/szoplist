@@ -92,3 +92,11 @@ export const deleteSharedList = (userId: string, listId: string) => {
 export const deleteListIdUser = (userId: string, listId: string) => {
   databaseConnect.ref(`/user/${userId}/list/${listId}`).remove();
 };
+
+export const addFriendToDatabase = (
+  userId: string,
+  friendId: string,
+  friend: object,
+) => {
+  databaseConnect.ref(`/user/${userId}/friends/${friendId}`).set(friend);
+};
