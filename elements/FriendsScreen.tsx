@@ -15,13 +15,13 @@ import {Icon} from 'react-native-elements';
 import {ScrollView} from 'react-native-gesture-handler';
 import Btn from './element/Btn';
 import CustomTextInput from './element/CustomTextInput';
-import {addFriend, removeFriend} from 'redux/userSlice';
+import {addFriend, removeFriend, setFriends} from 'redux/userSlice';
 import {storeData} from 'function/async-storage';
-import {addFriendToDatabase, deleteFriend} from 'function/database';
+import {addFriendToDatabase, deleteFriend, getFriends} from 'function/database';
 
 function FriendsScreen({navigation}: any): JSX.Element {
   const dispatch = useAppDispatch();
-  const friends: any = useAppSelector(state => state.user.friends);
+  const friends = useAppSelector(state => state.user.friends);
   const usr = useAppSelector(state => state.user.userData);
   const [person, setPerson] = React.useState({name: null, id: null});
   const [modalVisibility, setModalVisibility] = React.useState(false);

@@ -2,12 +2,12 @@ import auth from '@react-native-firebase/auth';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {GoogleSigninButton} from '@react-native-google-signin/google-signin';
 import React from 'react';
-import {setUser} from '../../redux/userSlice';
+import {setFriends, setUser} from '../../redux/userSlice';
 import {useAppSelector, useAppDispatch} from '../../hooks';
 import {storeData} from '../../function/async-storage';
-import {addNewUserToDatabase} from 'function/database';
+import {addNewUserToDatabase, getFriends} from 'function/database';
 import Btn from './Btn';
-function GoogleLoginBtn({navigation}:any): JSX.Element {
+function GoogleLoginBtn({navigation}: any): JSX.Element {
   const dispatch = useAppDispatch();
   async function onGoogleButtonPress() {
     await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true});
@@ -15,13 +15,18 @@ function GoogleLoginBtn({navigation}:any): JSX.Element {
     const googleCredential = auth.GoogleAuthProvider.credential(idToken);
     auth()
       .signInWithCredential(googleCredential)
-      .then(() => {
+      .then(result => {
         dispatch(setUser(auth().currentUser));
         storeData('@User', auth().currentUser);
-        addNewUserToDatabase(
-          auth().currentUser?.uid,
-          auth().currentUser?.email,
-        );
+        result.additionalUserInfo?.isNewUser
+          ? addNewUserToDatabase(
+              auth().currentUser?.uid,
+              auth().currentUser?.email,
+            )
+          : getFriends(auth().currentUser?.uid).then(value => {
+              dispatch(setFriends(value));
+              storeData('@Friends', value);
+            });
         navigation.navigate('Home');
       });
   }
@@ -33,11 +38,13 @@ function GoogleLoginBtn({navigation}:any): JSX.Element {
     //   }
     // />
     <Btn
-    function={()=>onGoogleButtonPress().then(() => console.log('Signed in with Google!'))}
-    name={"Zaloguj się z Google"}
-    minWidth={"65%"}
-    googleLogo={true}
+      function={() =>
+        onGoogleButtonPress().then(() => console.log('Signed in with Google!'))
+      }
+      name={'Zaloguj się z Google'}
+      minWidth={'65%'}
+      googleLogo={true}
     />
-    );
+  );
 }
 export default GoogleLoginBtn;

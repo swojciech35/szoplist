@@ -105,3 +105,11 @@ export const deleteFriend = (userId: string, friendId: string) => {
   console.log(friendId);
   databaseConnect.ref(`/user/${userId}/friends/${friendId}`).remove();
 };
+
+export const getFriends = (id: string|undefined) =>
+  databaseConnect
+    .ref(`/user/${id}/friends`)
+    .once('value')
+    .then(snapshot => {
+      return snapshot.val()!=null ? Object.values(snapshot.val()):[];
+    });
