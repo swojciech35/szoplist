@@ -100,3 +100,8 @@ export const addFriendToDatabase = (
 ) => {
   databaseConnect.ref(`/user/${userId}/friends/${friendId}`).set(friend);
 };
+export const deleteFriend = (userId: string, friendId: string) => {
+  console.log(userId);
+  console.log(friendId);
+  databaseConnect.ref(`/user/${userId}/friends/${friendId}`).remove();
+};

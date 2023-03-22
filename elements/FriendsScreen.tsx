@@ -17,7 +17,7 @@ import Btn from './element/Btn';
 import CustomTextInput from './element/CustomTextInput';
 import {addFriend, removeFriend} from 'redux/userSlice';
 import {storeData} from 'function/async-storage';
-import {addFriendToDatabase} from 'function/database';
+import {addFriendToDatabase, deleteFriend} from 'function/database';
 
 function FriendsScreen({navigation}: any): JSX.Element {
   const dispatch = useAppDispatch();
@@ -57,6 +57,7 @@ function FriendsScreen({navigation}: any): JSX.Element {
             <TouchableOpacity
               onPress={() => {
                 dispatch(removeFriend(person));
+                deleteFriend(usr.uid, person.id);
                 setModalVisibility(false);
               }}>
               <Icon
