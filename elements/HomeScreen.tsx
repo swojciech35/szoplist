@@ -14,7 +14,9 @@ function HomeScreen({navigation}: any): JSX.Element {
         <TouchableOpacity
           onPress={() => {
             // navigation.navigate('Create New List');
-            navigation.navigate('Show List');
+            navigation.navigate('Show List', {
+              listId: '0c4bd965-7407-4e92-b242-99e17f623b7f',
+            });
           }}>
           <Text>Utwórz nową listę</Text>
         </TouchableOpacity>

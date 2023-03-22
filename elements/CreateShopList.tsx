@@ -1,4 +1,4 @@
-import {View, Text, SafeAreaView, ScrollView} from 'react-native';
+import {View, Text, SafeAreaView, ScrollView, ToastAndroid} from 'react-native';
 import {CreateShopListProps} from 'navTypes';
 import {useState} from 'react';
 import {TextInput} from 'react-native';
@@ -7,13 +7,18 @@ import CustomTextInput from './element/CustomTextInput';
 import Icon from 'react-native-vector-icons/Entypo';
 import Btn from './element/Btn';
 import uuid from 'react-native-uuid';
+import DrawerShowButton from './element/DrawerShowButton';
+import {addListIdToUser, addNewList} from 'function/database';
+import {useAppSelector} from 'hooks';
 
 function CreateShopList({route, navigation}: CreateShopListProps): JSX.Element {
   const list = route.params.list;
-  const [listName, setName] = useState('');
-
+  const [listName, setName] = useState(route.params.name);
+  const id = route.params.id == null ? uuid.v4().toString() : route.params.id;
+  const usr = useAppSelector(state => state.user.userData);
+  const ifListSaved = route.params.id == null ? false : true;
   const createList = () => {
-    return {name: listName, listOfProducts: list, id: uuid.v4().toString()};
+    return {name: listName, listOfProducts: list, id: id};
   };
 
   let mappedList = list.map(category =>
@@ -39,6 +44,7 @@ function CreateShopList({route, navigation}: CreateShopListProps): JSX.Element {
 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: '#739FB7'}}>
+      <DrawerShowButton navigation={navigation} />
       <Text
         style={{
           color: 'black',
@@ -46,7 +52,7 @@ function CreateShopList({route, navigation}: CreateShopListProps): JSX.Element {
           margin: 10,
           textAlign: 'center',
         }}>
-        NOWA LISTA
+        {ifListSaved ? 'EDYTUJ LISTĘ' : 'NOWA LISTA'}
       </Text>
       <Text
         style={{
@@ -74,17 +80,27 @@ function CreateShopList({route, navigation}: CreateShopListProps): JSX.Element {
           </Text>
         )}
       </ScrollView>
+
       <Btn
         function={() => {
-          navigation.navigate('Select products screen', {list: list});
+          navigation.navigate('Select products screen', {
+            name: listName,
+            list: list,
+            id: route.params.id,
+          });
         }}
         name="Wybierz/edytuj produkty"
       />
       <Btn
-        name="Utwórz listę"
+        name="Zapisz listę"
         function={() => {
-          console.log(createList());
-          navigation.navigate('Home');
+          if (listName == '') {
+            ToastAndroid.show('Nazwa nie może być pusta', ToastAndroid.SHORT);
+          } else {
+            addNewList(id, createList());
+            if (usr != null) addListIdToUser(usr.uid, id);
+            navigation.navigate('Show List', {listId: id});
+          }
         }}
       />
     </SafeAreaView>
