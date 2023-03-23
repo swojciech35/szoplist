@@ -92,3 +92,24 @@ export const deleteSharedList = (userId: string, listId: string) => {
 export const deleteListIdUser = (userId: string, listId: string) => {
   databaseConnect.ref(`/user/${userId}/list/${listId}`).remove();
 };
+
+export const addFriendToDatabase = (
+  userId: string,
+  friendId: string,
+  friend: object,
+) => {
+  databaseConnect.ref(`/user/${userId}/friends/${friendId}`).set(friend);
+};
+export const deleteFriend = (userId: string, friendId: string) => {
+  console.log(userId);
+  console.log(friendId);
+  databaseConnect.ref(`/user/${userId}/friends/${friendId}`).remove();
+};
+
+export const getFriends = (id: string|undefined) =>
+  databaseConnect
+    .ref(`/user/${id}/friends`)
+    .once('value')
+    .then(snapshot => {
+      return snapshot.val()!=null ? Object.values(snapshot.val()):[];
+    });

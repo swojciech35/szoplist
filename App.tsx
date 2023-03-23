@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {NavigationContainer} from '@react-navigation/native';
-import {setUser} from './redux/userSlice';
+import {setFriends, setUser} from './redux/userSlice';
 import {useAppSelector, useAppDispatch} from './hooks';
 import {getData} from './function/async-storage';
 import SplashScreen from 'react-native-splash-screen';
@@ -19,6 +19,10 @@ function App(): JSX.Element {
     SplashScreen.hide();
     getData('@User').then(value => {
       dispatch(setUser(value));
+    });
+    getData('@Friends').then(value => {
+      value?
+      dispatch(setFriends(value)):dispatch(setFriends([]))
     });
   }, []);
   return (

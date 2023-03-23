@@ -1,4 +1,5 @@
 import CreateShopList from "elements/CreateShopList";
+import FriendsScreen from "elements/FriendsScreen";
 import HomeScreen from "elements/HomeScreen";
 import LoginScreen from "elements/LoginScreen";
 import RegisterScreen from "elements/RegisterScreen";
@@ -11,4 +12,5 @@ export const ScreenArray=[
     {route: "Show List",label:'Pokaż listę ',component:ShopList,initialParams:{},unmountOnBlur: true,headerShown:false,iconName:'list-alt',iconType:"",display:false},
     {route: "Login",label:'Zaloguj się ',component:LoginScreen,initialParams:{},unmountOnBlur: false,headerShown:false,iconName:'log-in',iconType:"feather",display:false},
     {route: "Register",label:'Zarejestruj się ',component:RegisterScreen,initialParams:{},unmountOnBlur: false,headerShown:false,iconName:'app-registration',iconType:"",display:false},
+    {route: "Friends",label:'Znajomi',component:FriendsScreen,initialParams:{},unmountOnBlur: false,headerShown:false,iconName:'users',iconType:"feather",display:true},
 ]

@@ -1,13 +1,14 @@
 import {View, Text, ToastAndroid, SafeAreaView} from 'react-native';
 import auth from '@react-native-firebase/auth';
 import React from 'react';
-import {setUser} from '../redux/userSlice';
+import {setFriends, setUser} from '../redux/userSlice';
 import {useAppSelector, useAppDispatch} from '../hooks';
 import {storeData} from '../function/async-storage';
 import GoogleLoginBtn from './element/googleLoginBtn';
 import Btn from './element/Btn';
 import CustomTextInput from './element/CustomTextInput';
 import DrawerShowButton from './element/DrawerShowButton';
+import {getFriends} from 'function/database';
 function LoginScreen({navigation}: any): JSX.Element {
   const usr = useAppSelector(state => state.user.userData);
   const dispatch = useAppDispatch();
@@ -22,6 +23,10 @@ function LoginScreen({navigation}: any): JSX.Element {
           console.log('User login succesfull');
           dispatch(setUser(auth().currentUser));
           storeData('@User', auth().currentUser);
+          getFriends(auth().currentUser?.uid).then(value => {
+            dispatch(setFriends(value));
+            storeData('@Friends', value);
+          });
           ToastAndroid.show('Zalogowano pomyślnie', ToastAndroid.SHORT);
           navigation.navigate('Home');
         })
@@ -59,7 +64,9 @@ function LoginScreen({navigation}: any): JSX.Element {
   return (
     <>
       <SafeAreaView style={{flex: 1, backgroundColor: '#739FB7'}}>
-        <View><DrawerShowButton navigation={navigation}/></View>
+        <View>
+          <DrawerShowButton navigation={navigation} />
+        </View>
         <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
           <Text style={{color: 'black', fontSize: 50}}>ZALOGUJ SIĘ</Text>
           <CustomTextInput
