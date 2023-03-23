@@ -15,7 +15,7 @@ import {Icon} from 'react-native-elements';
 import {ScrollView} from 'react-native-gesture-handler';
 import Btn from './element/Btn';
 import CustomTextInput from './element/CustomTextInput';
-import {addFriend, removeFriend, setFriends} from 'redux/userSlice';
+import {addFriend, removeFriend} from 'redux/userSlice';
 import {storeData} from 'function/async-storage';
 import {addFriendToDatabase, deleteFriend, getFriends} from 'function/database';
 
@@ -84,6 +84,8 @@ function FriendsScreen({navigation}: any): JSX.Element {
               flexDirection: 'row',
             }}
             onPress={() => {
+              setname('');
+              setFriendId('');
               setModalAddNewFriendVisibility(false);
             }}>
             <Icon
@@ -117,14 +119,18 @@ function FriendsScreen({navigation}: any): JSX.Element {
           <Btn
             name={'Dodaj znajomego Szopa'}
             function={() => {
-              dispatch(addFriend({name: name, id: friendId}));
-              addFriendToDatabase(usr.uid, friendId, {
-                name: name,
-                id: friendId,
-              });
-              setname('');
-              setFriendId('');
-              setModalAddNewFriendVisibility(false);
+              if (name.length > 0 && friendId.length > 0) {
+                dispatch(addFriend({name: name, id: friendId}));
+                addFriendToDatabase(usr.uid, friendId, {
+                  name: name,
+                  id: friendId,
+                });
+                setname('');
+                setFriendId('');
+                setModalAddNewFriendVisibility(false);
+              } else {
+                ToastAndroid.show('Uzupełnij puste pola', ToastAndroid.SHORT);
+              }
             }}
             minWidth={'65%'}
           />
