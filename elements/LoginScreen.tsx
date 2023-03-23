@@ -8,7 +8,8 @@ import GoogleLoginBtn from './element/googleLoginBtn';
 import Btn from './element/Btn';
 import CustomTextInput from './element/CustomTextInput';
 import DrawerShowButton from './element/DrawerShowButton';
-import {getFriends} from 'function/database';
+import {getFriends, getUserIdList} from 'function/database';
+import {setListId} from 'redux/listSlice';
 function LoginScreen({navigation}: any): JSX.Element {
   const usr = useAppSelector(state => state.user.userData);
   const dispatch = useAppDispatch();
@@ -26,6 +27,10 @@ function LoginScreen({navigation}: any): JSX.Element {
           getFriends(auth().currentUser?.uid).then(value => {
             dispatch(setFriends(value));
             storeData('@Friends', value);
+          });
+          getUserIdList(auth().currentUser?.uid).then(value => {
+            dispatch(setListId(value));
+            storeData('@ListId', value);
           });
           ToastAndroid.show('Zalogowano pomyślnie', ToastAndroid.SHORT);
           navigation.navigate('Home');

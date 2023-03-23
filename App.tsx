@@ -9,6 +9,7 @@ import {RootStackParamList} from 'navTypes';
 import {checkInternetConnection} from 'function/internet';
 import CustomDrawer from 'elements/drawer/CustomDrawer';
 import { ScreenArray } from './elements/drawer/arrays';
+import { setListId } from 'redux/listSlice';
 
 const Drawer = createDrawerNavigator<RootStackParamList>();
 
@@ -23,6 +24,10 @@ function App(): JSX.Element {
     getData('@Friends').then(value => {
       value?
       dispatch(setFriends(value)):dispatch(setFriends([]))
+    }); 
+    getData('@ListId').then(value => {
+      value?
+      dispatch(setListId(value)):dispatch(setListId([]))
     });
   }, []);
   return (
