@@ -8,7 +8,12 @@ import Icon from 'react-native-vector-icons/Entypo';
 import Btn from './element/Btn';
 import uuid from 'react-native-uuid';
 import DrawerShowButton from './element/DrawerShowButton';
-import {addListIdToUser, addNewList} from 'function/database';
+import {
+  addListIdToUser,
+  addNewList,
+  deleteList,
+  deleteListIdUser,
+} from 'function/database';
 import {useAppSelector} from 'hooks';
 
 function CreateShopList({route, navigation}: CreateShopListProps): JSX.Element {
@@ -91,6 +96,18 @@ function CreateShopList({route, navigation}: CreateShopListProps): JSX.Element {
         }}
         name="Wybierz/edytuj produkty"
       />
+
+      {ifListSaved ? (
+        <Btn
+          name="Usuń listę"
+          function={() => {
+            deleteList(id);
+            if (usr != null) deleteListIdUser(usr.id, id);
+            navigation.navigate('Home');
+          }}
+        />
+      ) : null}
+
       <Btn
         name="Zapisz listę"
         function={() => {
