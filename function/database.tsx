@@ -41,7 +41,7 @@ export const addNewList = (listId: string, list: object) => {
   databaseConnect.ref(`/list/${listId}`).set(list);
 };
 
-export const getlists = () =>
+export const getists = () =>
   databaseConnect
     .ref(`/list`)
     .once('value')
@@ -49,7 +49,7 @@ export const getlists = () =>
       return snapshot.val();
     });
 
-export const getlist = (id: string) =>
+export const getList = (id: string) =>
   databaseConnect
     .ref(`/list/${id}`)
     .once('value')

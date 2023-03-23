@@ -8,14 +8,23 @@ import GoogleLoginBtn from './element/googleLoginBtn';
 import Btn from './element/Btn';
 import CustomTextInput from './element/CustomTextInput';
 import DrawerShowButton from './element/DrawerShowButton';
-import {getFriends, getUserIdList} from 'function/database';
-import {setListId} from 'redux/listSlice';
+import {getFriends, getList, getUserIdList} from 'function/database';
+import {addListData, setListId} from 'redux/listSlice';
 function LoginScreen({navigation}: any): JSX.Element {
   const usr = useAppSelector(state => state.user.userData);
+  const listId = useAppSelector(state => state.list.listId);
+  const listData = useAppSelector(state => state.list.listData);
   const dispatch = useAppDispatch();
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
 
+  const getListFromDB = (array: any) => {
+    array.length > 0
+      ? array.map(async (_: {id: any}) => {
+          dispatch(addListData(await getList(_.id)));
+        })
+      : null;
+  };
   async function emailLogin() {
     if (email.length > 0 && password.length > 0) {
       auth()
@@ -28,10 +37,13 @@ function LoginScreen({navigation}: any): JSX.Element {
             dispatch(setFriends(value));
             storeData('@Friends', value);
           });
-          getUserIdList(auth().currentUser?.uid).then(value => {
+          getUserIdList(auth().currentUser?.uid).then(async value => {
             dispatch(setListId(value));
             storeData('@ListId', value);
+            getListFromDB(value);
           });
+
+          console.log(listId);
           ToastAndroid.show('Zalogowano pomyślnie', ToastAndroid.SHORT);
           navigation.navigate('Home');
         })

@@ -12,7 +12,7 @@ import {ProgressBar} from 'react-native-paper';
 import {useEffect, useState} from 'react';
 import Btn from './element/Btn';
 import {ToastAndroid} from 'react-native/Libraries/Components/ToastAndroid/ToastAndroid';
-import {addNewList, getlist} from 'function/database';
+import {addNewList, getList} from 'function/database';
 function ShopList({route, navigation}: ShopListProps): JSX.Element {
   const [list, setList] = useState({
     id: '',
@@ -41,7 +41,7 @@ function ShopList({route, navigation}: ShopListProps): JSX.Element {
 
   const getListFromDatabase = async () => {
     try {
-      const json = await getlist(route.params.listId);
+      const json = await getList(route.params.listId);
 
       setMarked(
         Array(json.listOfProducts.length)

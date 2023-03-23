@@ -8,11 +8,19 @@ import {storeData} from '../../function/async-storage';
 import {
   addNewUserToDatabase,
   getFriends,
+  getList,
   getUserIdList,
 } from 'function/database';
 import Btn from './Btn';
-import {setListId} from 'redux/listSlice';
+import {addListData, setListId} from 'redux/listSlice';
 function GoogleLoginBtn({navigation}: any): JSX.Element {
+  const getListFromDB = (array: any) => {
+    array.length > 0
+      ? array.map(async (_: {id: any}) => {
+          dispatch(addListData(await getList(_.id)));
+        })
+      : null;
+  };
   const dispatch = useAppDispatch();
   async function onGoogleButtonPress() {
     await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true});
@@ -36,6 +44,7 @@ function GoogleLoginBtn({navigation}: any): JSX.Element {
           getUserIdList(auth().currentUser?.uid).then(value => {
             dispatch(setListId(value));
             storeData('@ListId', value);
+            getListFromDB(value);
           });
         }
 
