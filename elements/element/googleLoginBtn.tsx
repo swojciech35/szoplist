@@ -13,14 +13,8 @@ import {
 } from 'function/database';
 import Btn from './Btn';
 import {addListData, setListId} from 'redux/listSlice';
+import {getListFromDB} from 'function/getDataFromDB';
 function GoogleLoginBtn({navigation}: any): JSX.Element {
-  const getListFromDB = (array: any) => {
-    array.length > 0
-      ? array.map(async (_: {id: any}) => {
-          dispatch(addListData(await getList(_.id)));
-        })
-      : null;
-  };
   const dispatch = useAppDispatch();
   async function onGoogleButtonPress() {
     await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true});
@@ -44,7 +38,7 @@ function GoogleLoginBtn({navigation}: any): JSX.Element {
           getUserIdList(auth().currentUser?.uid).then(value => {
             dispatch(setListId(value));
             storeData('@ListId', value);
-            getListFromDB(value);
+            dispatch(getListFromDB(value));
           });
         }
 

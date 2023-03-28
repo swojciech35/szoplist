@@ -10,6 +10,7 @@ import CustomTextInput from './element/CustomTextInput';
 import DrawerShowButton from './element/DrawerShowButton';
 import {getFriends, getList, getUserIdList} from 'function/database';
 import {addListData, setListId} from 'redux/listSlice';
+import {getListFromDB} from 'function/getDataFromDB';
 function LoginScreen({navigation}: any): JSX.Element {
   const usr = useAppSelector(state => state.user.userData);
   const listId = useAppSelector(state => state.list.listId);
@@ -18,13 +19,6 @@ function LoginScreen({navigation}: any): JSX.Element {
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
 
-  const getListFromDB = (array: any) => {
-    array.length > 0
-      ? array.map(async (_: {id: any}) => {
-          dispatch(addListData(await getList(_.id)));
-        })
-      : null;
-  };
   async function emailLogin() {
     if (email.length > 0 && password.length > 0) {
       auth()
@@ -40,7 +34,7 @@ function LoginScreen({navigation}: any): JSX.Element {
           getUserIdList(auth().currentUser?.uid).then(async value => {
             dispatch(setListId(value));
             storeData('@ListId', value);
-            getListFromDB(value);
+            dispatch(getListFromDB(value));
           });
 
           console.log(listId);
