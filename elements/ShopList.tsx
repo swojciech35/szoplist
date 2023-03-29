@@ -5,15 +5,28 @@ import {
   SafeAreaView,
   TouchableOpacity,
   ScrollView,
+  StyleSheet,
+  Modal,
 } from 'react-native';
 import CustomCheckbox from './CustomCheckbox';
 import DrawerShowButton from './element/DrawerShowButton';
 import {ProgressBar} from 'react-native-paper';
-import {useEffect, useState} from 'react';
+import {SetStateAction, useEffect, useState} from 'react';
 import Btn from './element/Btn';
 import {ToastAndroid} from 'react-native/Libraries/Components/ToastAndroid/ToastAndroid';
-import {addNewList, getlist} from 'function/database';
+import {
+  addListIdToShareUser,
+  addNewList,
+  addSharedListIdToFriend,
+  deleteSharedList,
+  deleteSharedListIdOfFriend,
+  getFriends,
+  getlist,
+} from 'function/database';
+import {useAppSelector} from 'hooks';
 function ShopList({route, navigation}: ShopListProps): JSX.Element {
+  const [friends, setFriends] = useState([]);
+  const usr = useAppSelector(state => state.user.userData);
   const [list, setList] = useState({
     id: '',
     listOfProducts: [
@@ -26,6 +39,7 @@ function ShopList({route, navigation}: ShopListProps): JSX.Element {
   });
   const [marked, setMarked] = useState([[false]]);
   const [loading, setLoading] = useState(true);
+  const [newWindow, setWindow] = useState(false);
 
   const markProduct = (catIndex: number, prodIndex: number) => {
     setMarked(check =>
@@ -63,6 +77,19 @@ function ShopList({route, navigation}: ShopListProps): JSX.Element {
     }
   };
 
+  const getFriendsFromDatabase = async () => {
+    try {
+      if (usr != null) {
+        const json = await getFriends(usr.uid);
+        setFriends(json);
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      console.log(friends);
+    }
+  };
+
   const howMany = () => {
     let resultMarked = 0;
     let resultAll = 0;
@@ -94,7 +121,51 @@ function ShopList({route, navigation}: ShopListProps): JSX.Element {
 
   useEffect(() => {
     getListFromDatabase();
+    getFriendsFromDatabase();
   }, []);
+
+  const mappedFriends = friends.map(friend => {
+    return (
+      <TouchableOpacity
+        key={friend.name}
+        style={{
+          flexDirection: 'row',
+          minWidth: '100%',
+          margin: 3,
+        }}
+        onPress={() => {
+          if (
+            friend.sharedList == null ||
+            !Object.keys(friend.sharedList).includes(list.id)
+          ) {
+            addSharedListIdToFriend(usr.uid, friend.id, list.id);
+            addListIdToShareUser(friend.id, list.id);
+          } else {
+            {
+              deleteSharedListIdOfFriend(usr.uid, friend.id, list.id);
+              deleteSharedList(friend.id, list.id);
+            }
+          }
+          getFriendsFromDatabase();
+        }}>
+        <CustomCheckbox
+          isChecked={
+            friend.sharedList != null
+              ? Object.keys(friend.sharedList).includes(list.id)
+              : false
+          }
+        />
+        <Text
+          style={{
+            fontSize: 20,
+            color: 'black',
+          }}>
+          {' '}
+          {friend.name}
+        </Text>
+      </TouchableOpacity>
+    );
+  });
 
   let mappedList = list.listOfProducts.map((category, categoryIndex) =>
     category.products.map((product, productIndex) => (
@@ -117,12 +188,34 @@ function ShopList({route, navigation}: ShopListProps): JSX.Element {
     )),
   );
 
+  const modal = (
+    <Modal visible={newWindow} animationType="slide" transparent={true}>
+      <View style={styles.centeredView}>
+        <View style={styles.modalView}>
+          <>
+            <Text style={{color: 'black', fontSize: 30, marginBottom: 20}}>
+              TWOI ZNAJOMI
+            </Text>
+            <ScrollView>{mappedFriends}</ScrollView>
+            <Btn
+              function={() => {
+                setWindow(!newWindow);
+              }}
+              name="Powrót"
+              minWidth="60%"
+            />
+          </>
+        </View>
+      </View>
+    </Modal>
+  );
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: '#739FB7'}}>
       <DrawerShowButton navigation={navigation} />
 
       {loading ? null : (
         <>
+          {modal}
           <Text
             style={{
               color: 'black',
@@ -148,6 +241,13 @@ function ShopList({route, navigation}: ShopListProps): JSX.Element {
           />
           <ScrollView style={{marginHorizontal: 10}}>{mappedList}</ScrollView>
           <Btn
+            name="Udostępnij listę"
+            function={() => {
+              setWindow(true);
+              console.log(friends);
+            }}
+          />
+          <Btn
             name="Edytuj listę"
             function={() => {
               navigation.navigate('Create New List', {
@@ -170,3 +270,27 @@ function ShopList({route, navigation}: ShopListProps): JSX.Element {
   );
 }
 export default ShopList;
+
+const styles = StyleSheet.create({
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: '#5a8196',
+    borderRadius: 20,
+    borderWidth: 2,
+    padding: 15,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    elevation: 20,
+    maxWidth: '70%',
+    maxHeight: '30%',
+  },
+});
