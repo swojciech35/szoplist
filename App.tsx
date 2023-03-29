@@ -10,6 +10,7 @@ import {checkInternetConnection} from 'function/internet';
 import CustomDrawer from 'elements/drawer/CustomDrawer';
 import {ScreenArray} from './elements/drawer/arrays';
 import {setListData, setListId} from 'redux/listSlice';
+import {getAndSetListFromDB} from 'function/getDataFromDB';
 
 const Drawer = createDrawerNavigator<RootStackParamList>();
 
@@ -17,18 +18,24 @@ function App(): JSX.Element {
   const dispatch = useAppDispatch();
   React.useEffect(() => {
     dispatch(checkInternetConnection());
+     getData('@ListData').then(value => {
+      value ? dispatch(setListData(value)) : dispatch(setListData([]));
+    });
     getData('@User').then(value => {
       dispatch(setUser(value));
     });
     getData('@Friends').then(value => {
       value ? dispatch(setFriends(value)) : dispatch(setFriends([]));
     });
-    getData('@ListId').then(value => {
-      value ? dispatch(setListId(value)) : dispatch(setListId([]));
+    getData('@ListId').then(async value => {
+      if (value) {
+        dispatch(setListId(value));
+        dispatch(getAndSetListFromDB(value));
+      } else {
+        dispatch(setListId([]));
+      }
     });
-    getData('@ListData').then(value => {
-      value ? dispatch(setListData(value)) : dispatch(setListData([]));
-    });
+   
     SplashScreen.hide();
   }, []);
   return (

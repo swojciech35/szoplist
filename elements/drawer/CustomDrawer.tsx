@@ -17,6 +17,7 @@ import GoogleLoginBtn from 'elements/element/googleLoginBtn';
 import auth from '@react-native-firebase/auth';
 import {setFriends, setUser} from '../../redux/userSlice';
 import {storeData} from '../../function/async-storage';
+import { setListData } from 'redux/listSlice';
 const DrawerItem = ({
   title,
   onPress,
@@ -64,6 +65,9 @@ const CustomDrawer = (props: any): JSX.Element => {
           storeData('@User', null);
             dispatch(setFriends([]));
             storeData('@Friends',[])
+            dispatch(setListData([]));
+            storeData('@ListData',[])
+            storeData('@ListId',[])
           console.log('User signed out!');
         });
     }
