@@ -13,7 +13,7 @@ import {
 } from 'function/database';
 import Btn from './Btn';
 import {addListData, setListId} from 'redux/listSlice';
-import {getListFromDB} from 'function/getDataFromDB';
+import {getListFromDBFirstLogin} from 'function/getDataFromDB';
 function GoogleLoginBtn({navigation}: any): JSX.Element {
   const dispatch = useAppDispatch();
   async function onGoogleButtonPress() {
@@ -38,7 +38,7 @@ function GoogleLoginBtn({navigation}: any): JSX.Element {
           getUserIdList(auth().currentUser?.uid).then(value => {
             dispatch(setListId(value));
             storeData('@ListId', value);
-            dispatch(getListFromDB(value));
+            dispatch(getListFromDBFirstLogin(value));
           });
         }
 

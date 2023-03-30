@@ -10,7 +10,7 @@ import CustomTextInput from './element/CustomTextInput';
 import DrawerShowButton from './element/DrawerShowButton';
 import {getFriends, getList, getUserIdList} from 'function/database';
 import {addListData, setListId} from 'redux/listSlice';
-import {getListFromDB} from 'function/getDataFromDB';
+import {getListFromDBFirstLogin} from 'function/getDataFromDB';
 function LoginScreen({navigation}: any): JSX.Element {
   const usr = useAppSelector(state => state.user.userData);
   const listId = useAppSelector(state => state.list.listId);
@@ -34,7 +34,7 @@ function LoginScreen({navigation}: any): JSX.Element {
           getUserIdList(auth().currentUser?.uid).then(async value => {
             dispatch(setListId(value));
             storeData('@ListId', value);
-            dispatch(getListFromDB(value));
+            dispatch(getListFromDBFirstLogin(value));
           });
 
           console.log(listId);

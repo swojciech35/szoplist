@@ -1,17 +1,27 @@
 import {View, Text, SafeAreaView} from 'react-native';
 import {TouchableOpacity} from 'react-native';
 import DrawerShowButton from './element/DrawerShowButton';
-import {useAppSelector} from 'hooks';
+import {useAppDispatch, useAppSelector} from 'hooks';
 import React from 'react';
 import {storeData} from 'function/async-storage';
 import Btn from './element/Btn';
 import {ScrollView} from 'react-native-gesture-handler';
+import { getListIdAndListData } from 'function/getDataFromDB';
 function HomeScreen({navigation}: any): JSX.Element {
+  const dispatch = useAppDispatch();
+  
   const listData = useAppSelector(state => state.list.listData);
+  const usr = useAppSelector(state => state.user.userData);
   const [isFocusedMyList, setIsFocusedMyList] = React.useState(true);
+  const internetConnection = useAppSelector(state => state.internet.internetConnection);
+  const [firstLoad, setFirstLoad]=React.useState(true)
   React.useEffect(() => {
+    if((firstLoad &&internetConnection)&&usr){
+      dispatch(getListIdAndListData(usr.uid))
+      setFirstLoad(false)
+    }
     listData.length > 0 ? storeData('@ListData', listData) : null;
-  }, [listData]);
+  }, [listData,usr]);
 
   return (
     <>
