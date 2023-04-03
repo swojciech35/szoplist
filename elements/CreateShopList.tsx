@@ -9,7 +9,8 @@ import Btn from './element/Btn';
 import uuid from 'react-native-uuid';
 import DrawerShowButton from './element/DrawerShowButton';
 import {addListIdToUser, addNewList} from 'function/database';
-import {useAppSelector} from 'hooks';
+import {useAppDispatch, useAppSelector} from 'hooks';
+import { addListData } from 'redux/listSlice';
 
 function CreateShopList({route, navigation}: CreateShopListProps): JSX.Element {
   const list = route.params.list;
@@ -17,6 +18,7 @@ function CreateShopList({route, navigation}: CreateShopListProps): JSX.Element {
   const id = route.params.id == null ? uuid.v4().toString() : route.params.id;
   const usr = useAppSelector(state => state.user.userData);
   const ifListSaved = route.params.id == null ? false : true;
+  const dispatch = useAppDispatch();
   const createList = () => {
     return {name: listName, listOfProducts: list, id: id};
   };
@@ -99,6 +101,7 @@ function CreateShopList({route, navigation}: CreateShopListProps): JSX.Element {
           } else {
             addNewList(id, createList());
             if (usr != null) addListIdToUser(usr.uid, id);
+            dispatch(addListData(createList()));
             navigation.navigate('Show List', {listId: id});
           }
         }}
