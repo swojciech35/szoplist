@@ -113,3 +113,24 @@ export const getFriends = (id: string | undefined) =>
     .then(snapshot => {
       return snapshot.val() != null ? Object.values(snapshot.val()) : [];
     });
+
+export const addSharedListIdToFriend = (
+  userId: string,
+  friendId: string,
+  listId: string,
+) => {
+  databaseConnect
+    .ref(`/user/${userId}/friends/${friendId}/sharedList/${listId}`)
+    .set({id: listId});
+};
+
+export const deleteSharedListIdOfFriend = (
+  userId: string,
+  friendId: string,
+  listId: string,
+) => {
+  databaseConnect
+    .ref(`/user/${userId}/friends/${friendId}/sharedList/${listId}`)
+    .remove();
+};
+
