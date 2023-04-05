@@ -11,7 +11,7 @@ export type RootStackParamList = {
 
 export type ListToSaveType = {
   id?: string;
-  name?: string;
+  name: string;
   list: {category: string; products: {name: string; checked: boolean}[]}[];
 };
 

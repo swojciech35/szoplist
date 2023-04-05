@@ -27,6 +27,7 @@ import {useAppSelector} from 'hooks';
 function ShopList({route, navigation}: ShopListProps): JSX.Element {
   const [friends, setFriends] = useState([]);
   const usr = useAppSelector(state => state.user.userData);
+  const mylists = useAppSelector(state => state.list.listId);
   const [list, setList] = useState({
     id: '',
     listOfProducts: [
@@ -240,23 +241,27 @@ function ShopList({route, navigation}: ShopListProps): JSX.Element {
             style={{margin: 15, borderWidth: 2, height: 15, borderRadius: 10}}
           />
           <ScrollView style={{marginHorizontal: 10}}>{mappedList}</ScrollView>
-          <Btn
-            name="Udostępnij listę"
-            function={() => {
-              setWindow(true);
-              console.log(friends);
-            }}
-          />
-          <Btn
-            name="Edytuj listę"
-            function={() => {
-              navigation.navigate('Create New List', {
-                id: list.id,
-                list: list.listOfProducts,
-                name: list.name,
-              });
-            }}
-          />
+          {Object.keys(mylists).includes(list.id) ? (
+            <>
+              <Btn
+                name="Udostępnij listę"
+                function={() => {
+                  setWindow(true);
+                  console.log(friends);
+                }}
+              />
+              <Btn
+                name="Edytuj listę"
+                function={() => {
+                  navigation.navigate('Create New List', {
+                    id: list.id,
+                    list: list.listOfProducts,
+                    name: list.name,
+                  });
+                }}
+              />
+            </>
+          ) : null}
           <Btn
             name="Zapisz listę"
             function={() => {
