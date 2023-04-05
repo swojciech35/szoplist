@@ -5,8 +5,15 @@ import React from 'react';
 import {setFriends, setUser} from '../../redux/userSlice';
 import {useAppSelector, useAppDispatch} from '../../hooks';
 import {storeData} from '../../function/async-storage';
-import {addNewUserToDatabase, getFriends} from 'function/database';
+import {
+  addNewUserToDatabase,
+  getFriends,
+  getList,
+  getUserIdList,
+} from 'function/database';
 import Btn from './Btn';
+import {addListData, setListId} from 'redux/listSlice';
+import {getListFromDBFirstLogin} from 'function/getDataFromDB';
 function GoogleLoginBtn({navigation}: any): JSX.Element {
   const dispatch = useAppDispatch();
   async function onGoogleButtonPress() {
@@ -18,15 +25,23 @@ function GoogleLoginBtn({navigation}: any): JSX.Element {
       .then(result => {
         dispatch(setUser(auth().currentUser));
         storeData('@User', auth().currentUser);
-        result.additionalUserInfo?.isNewUser
-          ? addNewUserToDatabase(
-              auth().currentUser?.uid,
-              auth().currentUser?.email,
-            )
-          : getFriends(auth().currentUser?.uid).then(value => {
-              dispatch(setFriends(value));
-              storeData('@Friends', value);
-            });
+        if (result.additionalUserInfo?.isNewUser) {
+          addNewUserToDatabase(
+            auth().currentUser?.uid,
+            auth().currentUser?.email,
+          );
+        } else {
+          getFriends(auth().currentUser?.uid).then(value => {
+            dispatch(setFriends(value));
+            storeData('@Friends', value);
+          });
+          getUserIdList(auth().currentUser?.uid).then(value => {
+            dispatch(setListId(value));
+            storeData('@ListId', value);
+            dispatch(getListFromDBFirstLogin(value));
+          });
+        }
+
         navigation.navigate('Home');
       });
   }

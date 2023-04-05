@@ -14,6 +14,7 @@ import {ProgressBar} from 'react-native-paper';
 import {SetStateAction, useEffect, useState} from 'react';
 import Btn from './element/Btn';
 import {ToastAndroid} from 'react-native/Libraries/Components/ToastAndroid/ToastAndroid';
+
 import {
   addListIdToShareUser,
   addNewList,
@@ -24,6 +25,9 @@ import {
   getlist,
 } from 'function/database';
 import {useAppSelector} from 'hooks';
+
+import {addNewList, getList} from 'function/database';
+
 function ShopList({route, navigation}: ShopListProps): JSX.Element {
   const [friends, setFriends] = useState([]);
   const usr = useAppSelector(state => state.user.userData);
@@ -56,7 +60,7 @@ function ShopList({route, navigation}: ShopListProps): JSX.Element {
 
   const getListFromDatabase = async () => {
     try {
-      const json = await getlist(route.params.listId);
+      const json = await getList(route.params.listId);
 
       setMarked(
         Array(json.listOfProducts.length)
