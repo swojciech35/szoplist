@@ -41,7 +41,7 @@ export const addNewList = (listId: string, list: object) => {
   databaseConnect.ref(`/list/${listId}`).set(list);
 };
 
-export const getlists = () =>
+export const getists = () =>
   databaseConnect
     .ref(`/list`)
     .once('value')
@@ -49,7 +49,7 @@ export const getlists = () =>
       return snapshot.val();
     });
 
-export const getlist = (id: string) =>
+export const getList = (id: string) =>
   databaseConnect
     .ref(`/list/${id}`)
     .once('value')
@@ -65,12 +65,12 @@ export const addListIdToUser = (userId: string, listId: string) => {
   databaseConnect.ref(`/user/${userId}/list/${listId}`).set({id: listId});
 };
 
-export const getUserIdList = (id: string) =>
+export const getUserIdList = (id: string | undefined) =>
   databaseConnect
     .ref(`/user/${id}/list`)
     .once('value')
     .then(snapshot => {
-      return snapshot.val();
+      return snapshot.val() != null ? Object.values(snapshot.val()) : [];
     });
 
 export const addListIdToShareUser = (userId: string, listId: string) => {
@@ -106,10 +106,10 @@ export const deleteFriend = (userId: string, friendId: string) => {
   databaseConnect.ref(`/user/${userId}/friends/${friendId}`).remove();
 };
 
-export const getFriends = (id: string|undefined) =>
+export const getFriends = (id: string | undefined) =>
   databaseConnect
     .ref(`/user/${id}/friends`)
     .once('value')
     .then(snapshot => {
-      return snapshot.val()!=null ? Object.values(snapshot.val()):[];
+      return snapshot.val() != null ? Object.values(snapshot.val()) : [];
     });

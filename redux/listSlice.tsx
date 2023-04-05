@@ -2,9 +2,9 @@ import {createSlice} from '@reduxjs/toolkit';
 export const listSlice = createSlice({
   name: 'list',
   initialState: {
-    listId: null,
+    listId: [],
     sharedListId: null,
-    listData: null,
+    listData: [],
     sharedListData: null,
   },
   reducers: {
@@ -20,8 +20,17 @@ export const listSlice = createSlice({
     setSharedListData: (state, action) => {
       state.sharedListData = action.payload;
     },
+    addListData: (state: any, action) => {
+      state.listData.push(action.payload);
+    },
   },
 });
 
-export const {setListId, setSharedListId, setListData, setSharedListData} = listSlice.actions;
+export const {
+  setListId,
+  setSharedListId,
+  setListData,
+  setSharedListData,
+  addListData,
+} = listSlice.actions;
 export default listSlice.reducer;

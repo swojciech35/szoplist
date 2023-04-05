@@ -11,7 +11,7 @@ function Btn(props: any): JSX.Element {
         padding: 5,
         minWidth: props.minWidth,
         margin: 10,
-        backgroundColor: '#699A41',
+        backgroundColor: props.color?props.color:'#699A41',
         alignItems: 'center',
         flexDirection: 'row',
         justifyContent: 'space-evenly',

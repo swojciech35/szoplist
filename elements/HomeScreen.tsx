@@ -1,26 +1,77 @@
-import {useNavigation} from '@react-navigation/native';
-import {View, Text} from 'react-native';
+import {View, Text, SafeAreaView} from 'react-native';
 import {TouchableOpacity} from 'react-native';
 import DrawerShowButton from './element/DrawerShowButton';
-
+import {useAppDispatch, useAppSelector} from 'hooks';
+import React from 'react';
+import {storeData} from 'function/async-storage';
+import Btn from './element/Btn';
+import {ScrollView} from 'react-native-gesture-handler';
+import { getListIdAndListData } from 'function/getDataFromDB';
 function HomeScreen({navigation}: any): JSX.Element {
+  const dispatch = useAppDispatch();
+  
+  const listData = useAppSelector(state => state.list.listData);
+  const usr = useAppSelector(state => state.user.userData);
+  const [isFocusedMyList, setIsFocusedMyList] = React.useState(true);
+  const internetConnection = useAppSelector(state => state.internet.internetConnection);
+  const [firstLoad, setFirstLoad]=React.useState(true)
+  React.useEffect(() => {
+    if((firstLoad &&internetConnection)&&usr){
+      dispatch(getListIdAndListData(usr.uid))
+      setFirstLoad(false)
+    }
+    listData.length > 0 ? storeData('@ListData', listData) : null;
+  }, [listData,usr]);
+
   return (
     <>
-      <View>
-        <DrawerShowButton navigation={navigation} />
-      </View>
-      <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-        <Text style={{color: 'black'}}>Home Screen</Text>
-        <TouchableOpacity
-          onPress={() => {
-            // navigation.navigate('Create New List');
-            navigation.navigate('Show List', {
-              listId: '0c4bd965-7407-4e92-b242-99e17f623b7f',
-            });
-          }}>
-          <Text>Utwórz nową listę</Text>
-        </TouchableOpacity>
-      </View>
+      <SafeAreaView style={{flex: 1, backgroundColor: '#739FB7'}}>
+        <View>
+          <DrawerShowButton navigation={navigation} />
+        </View>
+        <View
+          style={{flex: 1, alignItems: 'center', justifyContent: 'flex-start'}}>
+          <Text style={{color: 'black', fontSize: 35}}>LISTY ZAKUPOWE</Text>
+          <View style={{flexDirection: 'row'}}>
+            <Btn
+              name={'Moje Listy'}
+              function={() => setIsFocusedMyList(true)}
+              color={isFocusedMyList ? '#009A41' : null}
+            />
+            <Btn
+              name={'Udostępnione Listy'}
+              function={() => setIsFocusedMyList(false)}
+              color={isFocusedMyList ? null : '#009A41'}
+            />
+          </View>
+          <ScrollView>
+            {isFocusedMyList ? (
+              listData.map((_: any, i: any) => (
+                <TouchableOpacity
+                  style={{
+                    borderWidth: 2,
+                    borderRadius: 100,
+                    marginVertical: 10,
+                    alignItems: 'center',
+                    paddingHorizontal: 20,
+                    paddingVertical: 3,
+                    backgroundColor: '#5a8196',
+                  }}
+                  key={i}
+                  onPress={() =>
+                    navigation.navigate('Show List', {
+                      listId: _.id,
+                    })
+                  }>
+                  <Text style={{fontSize: 50, color: '#000000'}}>{_.name}</Text>
+                </TouchableOpacity>
+              ))
+            ) : (
+              <Text style={{color: 'black', fontSize: 50}}>udostępnione</Text>
+            )}
+          </ScrollView>
+        </View>
+      </SafeAreaView>
     </>
   );
 }
