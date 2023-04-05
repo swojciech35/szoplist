@@ -22,11 +22,9 @@ import {
   deleteSharedList,
   deleteSharedListIdOfFriend,
   getFriends,
-  getlist,
+  getList,
 } from 'function/database';
 import {useAppSelector} from 'hooks';
-
-import {addNewList, getList} from 'function/database';
 
 function ShopList({route, navigation}: ShopListProps): JSX.Element {
   const [friends, setFriends] = useState([]);
