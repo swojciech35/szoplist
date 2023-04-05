@@ -31,7 +31,7 @@ function HomeScreen({navigation}: any): JSX.Element {
         </View>
         <View
           style={{flex: 1, alignItems: 'center', justifyContent: 'flex-start'}}>
-          <Text style={{color: 'black', fontSize: 50}}>Listy Zakupowe</Text>
+          <Text style={{color: 'black', fontSize: 35}}>LISTY ZAKUPOWE</Text>
           <View style={{flexDirection: 'row'}}>
             <Btn
               name={'Moje Listy'}
