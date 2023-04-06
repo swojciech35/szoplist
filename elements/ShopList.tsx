@@ -44,6 +44,23 @@ function ShopList({route, navigation}: ShopListProps): JSX.Element {
   const [loading, setLoading] = useState(true);
   const [newWindow, setWindow] = useState(false);
 
+  // console.log(Object.values(mylists).includes({id: list.id}));
+  // console.log(mylists);
+  // console.log(Object.values(mylists));
+  // console.log({id: list.id});
+
+  const ifListOwner = () => {
+    let result = false;
+    mylists.forEach(value => {
+      if (value.id == list.id) {
+        result = true;
+      }
+    });
+    return result;
+  };
+
+  console.log(ifListOwner());
+
   const markProduct = (catIndex: number, prodIndex: number) => {
     setMarked(check =>
       check.map((itemC, indexC) =>
@@ -243,7 +260,7 @@ function ShopList({route, navigation}: ShopListProps): JSX.Element {
             style={{margin: 15, borderWidth: 2, height: 15, borderRadius: 10}}
           />
           <ScrollView style={{marginHorizontal: 10}}>{mappedList}</ScrollView>
-          {Object.keys(mylists).includes(list.id) ? (
+          {ifListOwner() ? (
             <>
               <Btn
                 name="Udostępnij listę"
