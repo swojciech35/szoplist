@@ -3,9 +3,9 @@ export const listSlice = createSlice({
   name: 'list',
   initialState: {
     listId: [],
-    sharedListId: null,
+    sharedListId: [],
     listData: [],
-    sharedListData: null,
+    sharedListData: [],
   },
   reducers: {
     setListId: (state, action) => {
