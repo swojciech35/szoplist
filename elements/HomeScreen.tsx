@@ -47,9 +47,15 @@ function HomeScreen({navigation}: any): JSX.Element {
             <Btn
               name={'Udostępnione Listy'}
               function={() => {
-                internetConnection
-                  ? dispatch(getSharedListIdAndListData(usr.uid))
-                  : ToastAndroid.show('Brak internetu', ToastAndroid.SHORT);
+                if (internetConnection) {
+                  if (usr) {
+                    dispatch(getSharedListIdAndListData(usr.uid));
+                  } else {
+                    ToastAndroid.show('zaloguj się', ToastAndroid.SHORT);
+                  }
+                } else {
+                  ToastAndroid.show('Brak internetu', ToastAndroid.SHORT);
+                }
                 setIsFocusedMyList(false);
               }}
               color={isFocusedMyList ? null : '#009A41'}
