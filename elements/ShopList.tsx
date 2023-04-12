@@ -29,6 +29,7 @@ import {useAppSelector} from 'hooks';
 function ShopList({route, navigation}: ShopListProps): JSX.Element {
   const [friends, setFriends] = useState([]);
   const usr = useAppSelector(state => state.user.userData);
+  const netInfo = useAppSelector(state => state.internet.internetConnection);
   const mylists = useAppSelector(state => state.list.listId);
   const [list, setList] = useState({
     id: '',
@@ -44,11 +45,6 @@ function ShopList({route, navigation}: ShopListProps): JSX.Element {
   const [loading, setLoading] = useState(true);
   const [newWindow, setWindow] = useState(false);
 
-  // console.log(Object.values(mylists).includes({id: list.id}));
-  // console.log(mylists);
-  // console.log(Object.values(mylists));
-  // console.log({id: list.id});
-
   const ifListOwner = () => {
     let result = false;
     mylists.forEach(value => {
@@ -58,8 +54,6 @@ function ShopList({route, navigation}: ShopListProps): JSX.Element {
     });
     return result;
   };
-
-  console.log(ifListOwner());
 
   const markProduct = (catIndex: number, prodIndex: number) => {
     setMarked(check =>
@@ -260,27 +254,28 @@ function ShopList({route, navigation}: ShopListProps): JSX.Element {
             style={{margin: 15, borderWidth: 2, height: 15, borderRadius: 10}}
           />
           <ScrollView style={{marginHorizontal: 10}}>{mappedList}</ScrollView>
-          {ifListOwner() ? (
-            <>
-              <Btn
-                name="Udostępnij listę"
-                function={() => {
-                  setWindow(true);
-                  console.log(friends);
-                }}
-              />
-              <Btn
-                name="Edytuj listę"
-                function={() => {
-                  navigation.navigate('Create New List', {
-                    id: list.id,
-                    list: list.listOfProducts,
-                    name: list.name,
-                  });
-                }}
-              />
-            </>
+          {usr != null && ifListOwner() && netInfo ? (
+            <Btn
+              name="Udostępnij listę"
+              function={() => {
+                setWindow(true);
+                console.log(friends);
+              }}
+            />
           ) : null}
+          {(usr != null && ifListOwner()) || usr == null ? (
+            <Btn
+              name="Edytuj listę"
+              function={() => {
+                navigation.navigate('Create New List', {
+                  id: list.id,
+                  list: list.listOfProducts,
+                  name: list.name,
+                });
+              }}
+            />
+          ) : null}
+
           <Btn
             name="Zapisz listę"
             function={() => {
