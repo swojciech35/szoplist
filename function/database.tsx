@@ -82,7 +82,7 @@ export const getUsersharedIdList = (id: string) =>
     .ref(`/user/${id}/sharedlist`)
     .once('value')
     .then(snapshot => {
-      return snapshot.val();
+      return snapshot.val() != null ? Object.values(snapshot.val()) : [];
     });
 
 export const deleteSharedList = (userId: string, listId: string) => {
