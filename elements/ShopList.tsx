@@ -13,7 +13,6 @@ import DrawerShowButton from './element/DrawerShowButton';
 import {ProgressBar} from 'react-native-paper';
 import {SetStateAction, useEffect, useState} from 'react';
 import Btn from './element/Btn';
-import {ToastAndroid} from 'react-native/Libraries/Components/ToastAndroid/ToastAndroid';
 
 import {
   addListIdToShareUser,
@@ -29,7 +28,9 @@ import {useAppSelector} from 'hooks';
 function ShopList({route, navigation}: ShopListProps): JSX.Element {
   const [friends, setFriends] = useState([]);
   const usr = useAppSelector(state => state.user.userData);
-  const mylists = useAppSelector(state => state.list.listId);
+  const netInfo = useAppSelector(state => state.internet.internetConnection);
+  const myListsIds = useAppSelector(state => state.list.listId);
+  const myListsData = useAppSelector(state => state.list.listData);
   const [list, setList] = useState({
     id: '',
     listOfProducts: [
@@ -43,6 +44,16 @@ function ShopList({route, navigation}: ShopListProps): JSX.Element {
   const [marked, setMarked] = useState([[false]]);
   const [loading, setLoading] = useState(true);
   const [newWindow, setWindow] = useState(false);
+
+  const ifListOwner = () => {
+    let result = false;
+    myListsIds.forEach(value => {
+      if (value.id == list.id) {
+        result = true;
+      }
+    });
+    return result;
+  };
 
   const markProduct = (catIndex: number, prodIndex: number) => {
     setMarked(check =>
@@ -80,6 +91,27 @@ function ShopList({route, navigation}: ShopListProps): JSX.Element {
     }
   };
 
+  const getListFromRedux = () => {
+    myListsData.forEach(value => {
+      if (value.id === route.params.listId) {
+        setMarked(
+          Array(value.listOfProducts.length)
+            .fill(null)
+            .map((item, index) =>
+              Array(value.listOfProducts[index].products.length)
+                .fill(false)
+                .map((prod, prodIndex) => {
+                  return value.listOfProducts[index].products[prodIndex]
+                    .checked;
+                }),
+            ),
+        );
+        setList(value);
+        setLoading(false);
+      }
+    });
+  };
+
   const getFriendsFromDatabase = async () => {
     try {
       if (usr != null) {
@@ -89,7 +121,6 @@ function ShopList({route, navigation}: ShopListProps): JSX.Element {
     } catch (error) {
       console.error(error);
     } finally {
-      console.log(friends);
     }
   };
 
@@ -123,8 +154,12 @@ function ShopList({route, navigation}: ShopListProps): JSX.Element {
   };
 
   useEffect(() => {
-    getListFromDatabase();
-    getFriendsFromDatabase();
+    if (netInfo) {
+      getListFromDatabase();
+      getFriendsFromDatabase();
+    } else {
+      getListFromRedux();
+    }
   }, []);
 
   const mappedFriends = friends.map(friend => {
@@ -243,27 +278,27 @@ function ShopList({route, navigation}: ShopListProps): JSX.Element {
             style={{margin: 15, borderWidth: 2, height: 15, borderRadius: 10}}
           />
           <ScrollView style={{marginHorizontal: 10}}>{mappedList}</ScrollView>
-          {Object.keys(mylists).includes(list.id) ? (
-            <>
-              <Btn
-                name="Udostępnij listę"
-                function={() => {
-                  setWindow(true);
-                  console.log(friends);
-                }}
-              />
-              <Btn
-                name="Edytuj listę"
-                function={() => {
-                  navigation.navigate('Create New List', {
-                    id: list.id,
-                    list: list.listOfProducts,
-                    name: list.name,
-                  });
-                }}
-              />
-            </>
+          {usr != null && ifListOwner() && netInfo ? (
+            <Btn
+              name="Udostępnij listę"
+              function={() => {
+                setWindow(true);
+              }}
+            />
           ) : null}
+          {(usr != null && ifListOwner()) || usr == null ? (
+            <Btn
+              name="Edytuj listę"
+              function={() => {
+                navigation.navigate('Create New List', {
+                  id: list.id,
+                  list: list.listOfProducts,
+                  name: list.name,
+                });
+              }}
+            />
+          ) : null}
+
           <Btn
             name="Zapisz listę"
             function={() => {
