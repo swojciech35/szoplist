@@ -18,6 +18,8 @@ import {
   addListIdToShareUser,
   addNewList,
   addSharedListIdToFriend,
+  deleteList,
+  deleteListIdUser,
   deleteSharedList,
   deleteSharedListIdOfFriend,
   getFriends,
@@ -43,7 +45,9 @@ function ShopList({route, navigation}: ShopListProps): JSX.Element {
   });
   const [marked, setMarked] = useState([[false]]);
   const [loading, setLoading] = useState(true);
-  const [newWindow, setWindow] = useState(false);
+  const [friendsWindow, setFriendsWindow] = useState(false);
+  const [deleteWindow, setDeleteWindow] = useState(false);
+  const [finishWindow, setFinishWindow] = useState(false);
 
   const ifListOwner = () => {
     let result = false;
@@ -53,6 +57,23 @@ function ShopList({route, navigation}: ShopListProps): JSX.Element {
       }
     });
     return result;
+  };
+
+  const deleteListFunction = () => {
+    deleteList(list.id);
+    deleteListIdUser(usr.uid, list.id);
+
+    friends.map(friend => {
+      if (
+        friend.sharedList != null &&
+        Object.keys(friend.sharedList).includes(list.id)
+      ) {
+        deleteSharedListIdOfFriend(usr.uid, friend.id, list.id);
+        deleteSharedList(friend.id, list.id);
+      }
+    });
+
+    navigation.navigate('Home');
   };
 
   const markProduct = (catIndex: number, prodIndex: number) => {
@@ -139,10 +160,6 @@ function ShopList({route, navigation}: ShopListProps): JSX.Element {
   };
 
   const updateList = () => {
-    // if (howMany()[0] == howMany()[1]) {
-    //   ToastAndroid.show('Wszystkie!', ToastAndroid.SHORT);
-    // }
-
     let tmp = list;
     tmp.listOfProducts.forEach((category, categoryIndex) =>
       category.products.forEach(
@@ -226,8 +243,81 @@ function ShopList({route, navigation}: ShopListProps): JSX.Element {
     )),
   );
 
-  const modal = (
-    <Modal visible={newWindow} animationType="slide" transparent={true}>
+  const deleteModal = (
+    <Modal visible={deleteWindow} animationType="slide" transparent={true}>
+      <View style={styles.centeredView}>
+        <View style={styles.modalView}>
+          <>
+            <Text style={{color: 'black', fontSize: 20, marginBottom: 20}}>
+              Czy na pewno chcesz usunąć listę {list.name}?
+            </Text>
+            <Btn
+              function={() => {
+                deleteListFunction();
+              }}
+              name="Tak"
+              minWidth="60%"
+            />
+            <Btn
+              function={() => {
+                setDeleteWindow(!deleteWindow);
+              }}
+              name="Nie"
+              minWidth="60%"
+            />
+          </>
+        </View>
+      </View>
+    </Modal>
+  );
+
+  const finishModal = (
+    <Modal visible={finishWindow} animationType="slide" transparent={true}>
+      <View style={styles.centeredView}>
+        <View style={styles.modalView}>
+          <>
+            <Text style={{color: 'black', fontSize: 20, marginBottom: 20}}>
+              Skończono zakupy!
+            </Text>
+            <Btn
+              function={() => {
+                deleteListFunction();
+              }}
+              name="Usuń listę"
+              minWidth="60%"
+            />
+            <Btn
+              function={() => {
+                setMarked(
+                  Array(list.listOfProducts.length)
+                    .fill(null)
+                    .map((item, index) =>
+                      Array(list.listOfProducts[index].products.length).fill(
+                        false,
+                      ),
+                    ),
+                );
+                setFinishWindow(!finishWindow);
+              }}
+              name="Zresetuj listę"
+              minWidth="60%"
+            />
+            <Btn
+              function={() => {
+                addNewList(list.id, updateList());
+                navigation.navigate('Home');
+              }}
+              name="Wyjdź"
+              minWidth="60%"
+            />
+          </>
+        </View>
+      </View>
+    </Modal>
+  );
+
+  const friendsModal = (
+    <Modal visible={friendsWindow} animationType="slide" transparent={true}>
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
           <>
@@ -237,7 +327,7 @@ function ShopList({route, navigation}: ShopListProps): JSX.Element {
             <ScrollView>{mappedFriends}</ScrollView>
             <Btn
               function={() => {
-                setWindow(!newWindow);
+                setFriendsWindow(!friendsWindow);
               }}
               name="Powrót"
               minWidth="60%"
@@ -253,7 +343,9 @@ function ShopList({route, navigation}: ShopListProps): JSX.Element {
 
       {loading ? null : (
         <>
-          {modal}
+          {friendsModal}
+          {deleteModal}
+          {finishModal}
           <Text
             style={{
               color: 'black',
@@ -282,28 +374,41 @@ function ShopList({route, navigation}: ShopListProps): JSX.Element {
             <Btn
               name="Udostępnij listę"
               function={() => {
-                setWindow(true);
+                setFriendsWindow(true);
               }}
             />
           ) : null}
           {(usr != null && ifListOwner()) || usr == null ? (
-            <Btn
-              name="Edytuj listę"
-              function={() => {
-                navigation.navigate('Create New List', {
-                  id: list.id,
-                  list: list.listOfProducts,
-                  name: list.name,
-                });
-              }}
-            />
+            <>
+              <Btn
+                name="Edytuj listę"
+                function={() => {
+                  navigation.navigate('Create New List', {
+                    id: list.id,
+                    list: list.listOfProducts,
+                    name: list.name,
+                  });
+                }}
+              />
+
+              <Btn
+                name="Usuń listę"
+                function={() => {
+                  setDeleteWindow(true);
+                }}
+              />
+            </>
           ) : null}
 
           <Btn
             name="Zapisz listę"
             function={() => {
-              addNewList(list.id, updateList());
-              navigation.navigate('Home');
+              if (howMany()[0] == howMany()[1]) {
+                setFinishWindow(true);
+              } else {
+                addNewList(list.id, updateList());
+                navigation.navigate('Home');
+              }
             }}
           />
         </>
@@ -333,6 +438,6 @@ const styles = StyleSheet.create({
     },
     elevation: 20,
     maxWidth: '70%',
-    maxHeight: '30%',
+    maxHeight: '40%',
   },
 });
