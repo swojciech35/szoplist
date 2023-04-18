@@ -10,7 +10,7 @@ import uuid from 'react-native-uuid';
 import DrawerShowButton from './element/DrawerShowButton';
 import {addListIdToUser, addNewList} from 'function/database';
 import {useAppDispatch, useAppSelector} from 'hooks';
-import { addListData } from 'redux/listSlice';
+import {addListData} from 'redux/listSlice';
 
 function CreateShopList({route, navigation}: CreateShopListProps): JSX.Element {
   const list = route.params.list;

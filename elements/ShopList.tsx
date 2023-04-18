@@ -18,6 +18,8 @@ import {
   addListIdToShareUser,
   addNewList,
   addSharedListIdToFriend,
+  deleteList,
+  deleteListIdUser,
   deleteSharedList,
   deleteSharedListIdOfFriend,
   getFriends,
@@ -287,16 +289,38 @@ function ShopList({route, navigation}: ShopListProps): JSX.Element {
             />
           ) : null}
           {(usr != null && ifListOwner()) || usr == null ? (
-            <Btn
-              name="Edytuj listę"
-              function={() => {
-                navigation.navigate('Create New List', {
-                  id: list.id,
-                  list: list.listOfProducts,
-                  name: list.name,
-                });
-              }}
-            />
+            <>
+              <Btn
+                name="Edytuj listę"
+                function={() => {
+                  navigation.navigate('Create New List', {
+                    id: list.id,
+                    list: list.listOfProducts,
+                    name: list.name,
+                  });
+                }}
+              />
+
+              <Btn
+                name="Usuń listę"
+                function={() => {
+                  deleteList(list.id);
+                  deleteListIdUser(usr.uid, list.id);
+
+                  friends.map(friend => {
+                    if (
+                      friend.sharedList != null &&
+                      Object.keys(friend.sharedList).includes(list.id)
+                    ) {
+                      deleteSharedListIdOfFriend(usr.uid, friend.id, list.id);
+                      deleteSharedList(friend.id, list.id);
+                    }
+                  });
+
+                  navigation.navigate('Home');
+                }}
+              />
+            </>
           ) : null}
 
           <Btn
