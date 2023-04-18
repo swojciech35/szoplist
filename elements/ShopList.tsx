@@ -45,7 +45,8 @@ function ShopList({route, navigation}: ShopListProps): JSX.Element {
   });
   const [marked, setMarked] = useState([[false]]);
   const [loading, setLoading] = useState(true);
-  const [newWindow, setWindow] = useState(false);
+  const [friendsWindow, setFriendsWindow] = useState(false);
+  const [deleteWindow, setDeleteWindow] = useState(false);
 
   const ifListOwner = () => {
     let result = false;
@@ -55,6 +56,23 @@ function ShopList({route, navigation}: ShopListProps): JSX.Element {
       }
     });
     return result;
+  };
+
+  const deleteListFunction = () => {
+    deleteList(list.id);
+    deleteListIdUser(usr.uid, list.id);
+
+    friends.map(friend => {
+      if (
+        friend.sharedList != null &&
+        Object.keys(friend.sharedList).includes(list.id)
+      ) {
+        deleteSharedListIdOfFriend(usr.uid, friend.id, list.id);
+        deleteSharedList(friend.id, list.id);
+      }
+    });
+
+    navigation.navigate('Home');
   };
 
   const markProduct = (catIndex: number, prodIndex: number) => {
@@ -228,8 +246,36 @@ function ShopList({route, navigation}: ShopListProps): JSX.Element {
     )),
   );
 
-  const modal = (
-    <Modal visible={newWindow} animationType="slide" transparent={true}>
+  const deleteModal = (
+    <Modal visible={deleteWindow} animationType="slide" transparent={true}>
+      <View style={styles.centeredView}>
+        <View style={styles.modalView}>
+          <>
+            <Text style={{color: 'black', fontSize: 20, marginBottom: 20}}>
+              Czy na pewno chcesz usunąć listę {list.name}?
+            </Text>
+            <Btn
+              function={() => {
+                deleteListFunction();
+              }}
+              name="Tak"
+              minWidth="60%"
+            />
+            <Btn
+              function={() => {
+                setDeleteWindow(!deleteWindow);
+              }}
+              name="Nie"
+              minWidth="60%"
+            />
+          </>
+        </View>
+      </View>
+    </Modal>
+  );
+
+  const friendsModal = (
+    <Modal visible={friendsWindow} animationType="slide" transparent={true}>
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
           <>
@@ -239,7 +285,7 @@ function ShopList({route, navigation}: ShopListProps): JSX.Element {
             <ScrollView>{mappedFriends}</ScrollView>
             <Btn
               function={() => {
-                setWindow(!newWindow);
+                setFriendsWindow(!friendsWindow);
               }}
               name="Powrót"
               minWidth="60%"
@@ -255,7 +301,8 @@ function ShopList({route, navigation}: ShopListProps): JSX.Element {
 
       {loading ? null : (
         <>
-          {modal}
+          {friendsModal}
+          {deleteModal}
           <Text
             style={{
               color: 'black',
@@ -284,7 +331,7 @@ function ShopList({route, navigation}: ShopListProps): JSX.Element {
             <Btn
               name="Udostępnij listę"
               function={() => {
-                setWindow(true);
+                setFriendsWindow(true);
               }}
             />
           ) : null}
@@ -304,20 +351,7 @@ function ShopList({route, navigation}: ShopListProps): JSX.Element {
               <Btn
                 name="Usuń listę"
                 function={() => {
-                  deleteList(list.id);
-                  deleteListIdUser(usr.uid, list.id);
-
-                  friends.map(friend => {
-                    if (
-                      friend.sharedList != null &&
-                      Object.keys(friend.sharedList).includes(list.id)
-                    ) {
-                      deleteSharedListIdOfFriend(usr.uid, friend.id, list.id);
-                      deleteSharedList(friend.id, list.id);
-                    }
-                  });
-
-                  navigation.navigate('Home');
+                  setDeleteWindow(true);
                 }}
               />
             </>
@@ -357,6 +391,6 @@ const styles = StyleSheet.create({
     },
     elevation: 20,
     maxWidth: '70%',
-    maxHeight: '30%',
+    maxHeight: '40%',
   },
 });
