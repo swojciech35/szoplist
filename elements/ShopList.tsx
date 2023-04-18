@@ -13,7 +13,6 @@ import DrawerShowButton from './element/DrawerShowButton';
 import {ProgressBar} from 'react-native-paper';
 import {SetStateAction, useEffect, useState} from 'react';
 import Btn from './element/Btn';
-import {ToastAndroid} from 'react-native/Libraries/Components/ToastAndroid/ToastAndroid';
 
 import {
   addListIdToShareUser,
@@ -30,7 +29,8 @@ function ShopList({route, navigation}: ShopListProps): JSX.Element {
   const [friends, setFriends] = useState([]);
   const usr = useAppSelector(state => state.user.userData);
   const netInfo = useAppSelector(state => state.internet.internetConnection);
-  const mylists = useAppSelector(state => state.list.listId);
+  const myListsIds = useAppSelector(state => state.list.listId);
+  const myListsData = useAppSelector(state => state.list.listData);
   const [list, setList] = useState({
     id: '',
     listOfProducts: [
@@ -47,7 +47,7 @@ function ShopList({route, navigation}: ShopListProps): JSX.Element {
 
   const ifListOwner = () => {
     let result = false;
-    mylists.forEach(value => {
+    myListsIds.forEach(value => {
       if (value.id == list.id) {
         result = true;
       }
@@ -89,6 +89,28 @@ function ShopList({route, navigation}: ShopListProps): JSX.Element {
     } finally {
       setLoading(false);
     }
+  };
+
+  const getListFromRedux = () => {
+    myListsData.forEach(value => {
+      if (value.id === route.params.listId) {
+        setMarked(
+          Array(value.listOfProducts.length)
+            .fill(null)
+            .map((item, index) =>
+              Array(value.listOfProducts[index].products.length)
+                .fill(false)
+                .map((prod, prodIndex) => {
+                  return value.listOfProducts[index].products[prodIndex]
+                    .checked;
+                }),
+            ),
+        );
+        console.log('LISTAAA', value);
+        setList(value);
+        setLoading(false);
+      }
+    });
   };
 
   const getFriendsFromDatabase = async () => {
@@ -134,8 +156,13 @@ function ShopList({route, navigation}: ShopListProps): JSX.Element {
   };
 
   useEffect(() => {
-    getListFromDatabase();
-    getFriendsFromDatabase();
+    console.log(netInfo);
+    if (netInfo) {
+      getListFromDatabase();
+      getFriendsFromDatabase();
+    } else {
+      getListFromRedux();
+    }
   }, []);
 
   const mappedFriends = friends.map(friend => {
@@ -259,7 +286,6 @@ function ShopList({route, navigation}: ShopListProps): JSX.Element {
               name="Udostępnij listę"
               function={() => {
                 setWindow(true);
-                console.log(friends);
               }}
             />
           ) : null}
