@@ -47,6 +47,7 @@ function ShopList({route, navigation}: ShopListProps): JSX.Element {
   const [loading, setLoading] = useState(true);
   const [friendsWindow, setFriendsWindow] = useState(false);
   const [deleteWindow, setDeleteWindow] = useState(false);
+  const [finishWindow, setFinishWindow] = useState(false);
 
   const ifListOwner = () => {
     let result = false;
@@ -159,10 +160,6 @@ function ShopList({route, navigation}: ShopListProps): JSX.Element {
   };
 
   const updateList = () => {
-    // if (howMany()[0] == howMany()[1]) {
-    //   ToastAndroid.show('Wszystkie!', ToastAndroid.SHORT);
-    // }
-
     let tmp = list;
     tmp.listOfProducts.forEach((category, categoryIndex) =>
       category.products.forEach(
@@ -274,6 +271,51 @@ function ShopList({route, navigation}: ShopListProps): JSX.Element {
     </Modal>
   );
 
+  const finishModal = (
+    <Modal visible={finishWindow} animationType="slide" transparent={true}>
+      <View style={styles.centeredView}>
+        <View style={styles.modalView}>
+          <>
+            <Text style={{color: 'black', fontSize: 20, marginBottom: 20}}>
+              Skończono zakupy!
+            </Text>
+            <Btn
+              function={() => {
+                deleteListFunction();
+              }}
+              name="Usuń listę"
+              minWidth="60%"
+            />
+            <Btn
+              function={() => {
+                setMarked(
+                  Array(list.listOfProducts.length)
+                    .fill(null)
+                    .map((item, index) =>
+                      Array(list.listOfProducts[index].products.length).fill(
+                        false,
+                      ),
+                    ),
+                );
+                setFinishWindow(!finishWindow);
+              }}
+              name="Zresetuj listę"
+              minWidth="60%"
+            />
+            <Btn
+              function={() => {
+                addNewList(list.id, updateList());
+                navigation.navigate('Home');
+              }}
+              name="Wyjdź"
+              minWidth="60%"
+            />
+          </>
+        </View>
+      </View>
+    </Modal>
+  );
+
   const friendsModal = (
     <Modal visible={friendsWindow} animationType="slide" transparent={true}>
       <View style={styles.centeredView}>
@@ -303,6 +345,7 @@ function ShopList({route, navigation}: ShopListProps): JSX.Element {
         <>
           {friendsModal}
           {deleteModal}
+          {finishModal}
           <Text
             style={{
               color: 'black',
@@ -360,8 +403,12 @@ function ShopList({route, navigation}: ShopListProps): JSX.Element {
           <Btn
             name="Zapisz listę"
             function={() => {
-              addNewList(list.id, updateList());
-              navigation.navigate('Home');
+              if (howMany()[0] == howMany()[1]) {
+                setFinishWindow(true);
+              } else {
+                addNewList(list.id, updateList());
+                navigation.navigate('Home');
+              }
             }}
           />
         </>
