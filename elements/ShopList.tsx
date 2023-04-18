@@ -106,7 +106,6 @@ function ShopList({route, navigation}: ShopListProps): JSX.Element {
                 }),
             ),
         );
-        console.log('LISTAAA', value);
         setList(value);
         setLoading(false);
       }
@@ -122,7 +121,6 @@ function ShopList({route, navigation}: ShopListProps): JSX.Element {
     } catch (error) {
       console.error(error);
     } finally {
-      console.log(friends);
     }
   };
 
@@ -156,7 +154,6 @@ function ShopList({route, navigation}: ShopListProps): JSX.Element {
   };
 
   useEffect(() => {
-    console.log(netInfo);
     if (netInfo) {
       getListFromDatabase();
       getFriendsFromDatabase();
