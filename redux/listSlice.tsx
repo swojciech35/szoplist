@@ -20,6 +20,9 @@ export const listSlice = createSlice({
     setSharedListData: (state, action) => {
       state.sharedListData = action.payload;
     },
+    addListId: (state: any, action) => {
+      state.listId.push(action.payload);
+    },
     addListData: (state: any, action) => {
       state.listData.push(action.payload);
     },
@@ -31,6 +34,7 @@ export const {
   setSharedListId,
   setListData,
   setSharedListData,
+  addListId,
   addListData,
 } = listSlice.actions;
 export default listSlice.reducer;

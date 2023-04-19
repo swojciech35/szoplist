@@ -10,7 +10,7 @@ import uuid from 'react-native-uuid';
 import DrawerShowButton from './element/DrawerShowButton';
 import {addListIdToUser, addNewList} from 'function/database';
 import {useAppDispatch, useAppSelector} from 'hooks';
-import {addListData} from 'redux/listSlice';
+import {addListData, addListId} from 'redux/listSlice';
 
 function CreateShopList({route, navigation}: CreateShopListProps): JSX.Element {
   const list = route.params.list;
@@ -100,7 +100,10 @@ function CreateShopList({route, navigation}: CreateShopListProps): JSX.Element {
             ToastAndroid.show('Nazwa nie może być pusta', ToastAndroid.SHORT);
           } else {
             addNewList(id, createList());
-            if (usr != null) addListIdToUser(usr.uid, id);
+            if (usr != null) {
+              addListIdToUser(usr.uid, id);
+              dispatch(addListId({id: id}));
+            }
             dispatch(addListData(createList()));
             navigation.navigate('Show List', {listId: id});
           }
