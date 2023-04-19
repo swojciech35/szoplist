@@ -21,10 +21,23 @@ export const listSlice = createSlice({
       state.sharedListData = action.payload;
     },
     addListId: (state: any, action) => {
-      state.listId.push(action.payload);
+      let index = state.listId.findIndex(
+        value => value.id == action.payload.id,
+      );
+      if (index == -1) {
+        state.listId.push(action.payload);
+      }
     },
     addListData: (state: any, action) => {
-      state.listData.push(action.payload);
+      let index = state.listData.findIndex(
+        value => value.id == action.payload.id,
+      );
+
+      if (index == -1) {
+        state.listData.push(action.payload);
+      } else {
+        state.listData[index] = action.payload;
+      }
     },
   },
 });
