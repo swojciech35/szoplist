@@ -13,7 +13,7 @@ import DrawerShowButton from './element/DrawerShowButton';
 import {ProgressBar} from 'react-native-paper';
 import {SetStateAction, useEffect, useState} from 'react';
 import Btn from './element/Btn';
-
+import {Icon} from 'react-native-elements';
 import {
   addListIdToShareUser,
   addNewList,
@@ -346,15 +346,53 @@ function ShopList({route, navigation}: ShopListProps): JSX.Element {
           {friendsModal}
           {deleteModal}
           {finishModal}
+
           <Text
             style={{
               color: 'black',
               fontSize: 30,
-              margin: 10,
+              marginVertical: 10,
               textAlign: 'center',
+              alignSelf: 'center',
+              alignContent: 'center',
+              marginHorizontal: 100,
             }}>
             {list.name}
           </Text>
+
+          {(usr != null && ifListOwner()) || usr == null ? (
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'flex-end',
+                position: 'absolute',
+                alignSelf: 'flex-end',
+
+                padding: 10,
+              }}>
+              <Icon
+                name={'trash-2'}
+                type={'feather'}
+                color={'#FF0000'}
+                size={30}
+                onPress={() => setDeleteWindow(true)}
+              />
+              <Icon
+                name={'edit'}
+                type={'feather'}
+                color={'#3c5925'}
+                size={30}
+                onPress={() => {
+                  navigation.navigate('Create New List', {
+                    id: list.id,
+                    list: list.listOfProducts,
+                    name: list.name,
+                  });
+                }}
+              />
+            </View>
+          ) : null}
+
           <Text
             style={{
               fontSize: 20,
@@ -377,27 +415,6 @@ function ShopList({route, navigation}: ShopListProps): JSX.Element {
                 setFriendsWindow(true);
               }}
             />
-          ) : null}
-          {(usr != null && ifListOwner()) || usr == null ? (
-            <>
-              <Btn
-                name="Edytuj listę"
-                function={() => {
-                  navigation.navigate('Create New List', {
-                    id: list.id,
-                    list: list.listOfProducts,
-                    name: list.name,
-                  });
-                }}
-              />
-
-              <Btn
-                name="Usuń listę"
-                function={() => {
-                  setDeleteWindow(true);
-                }}
-              />
-            </>
           ) : null}
 
           <Btn
