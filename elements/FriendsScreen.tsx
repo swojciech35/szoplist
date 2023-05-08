@@ -165,7 +165,7 @@ function FriendsScreen({navigation}: any): JSX.Element {
         <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
           {modal}
           {modalAddNewFriend}
-          <Text style={{color: 'black', fontSize: 40}}>Przyjazne Szopy</Text>
+          <Text style={{color: 'black', fontSize: 40}}>PRZYJAZNE SZOPY</Text>
           {friends != null && friends.length > 0 ? (
             <View style={{width: '100%'}}>
               <ScrollView style={{height: '80%'}}>

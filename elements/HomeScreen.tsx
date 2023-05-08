@@ -73,6 +73,7 @@ function HomeScreen({navigation}: any): JSX.Element {
                       paddingHorizontal: 20,
                       paddingVertical: 3,
                       backgroundColor: '#5a8196',
+                      minWidth: '90%',
                     }}
                     key={i}
                     onPress={() =>
@@ -95,6 +96,7 @@ function HomeScreen({navigation}: any): JSX.Element {
                       paddingHorizontal: 20,
                       paddingVertical: 3,
                       backgroundColor: '#5a8196',
+                      minWidth: '90%',
                     }}
                     key={i}
                     onPress={() =>
